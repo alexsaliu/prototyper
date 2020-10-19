@@ -1,0 +1,19 @@
+.editor {
+    background: #fbfbfb;
+}
+
+.panel-canvas-container {
+    height: calc(100% - 60px);
+    display: flex;
+}
+
+.canvas-container {
+    position: relative;
+    background: #e8e8e8;
+    width: calc(100% - 300px);
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    overflow: auto;
+}

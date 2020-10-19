@@ -1,0 +1,97 @@
+.adjuster-container {
+    border: 1px solid var(--highlight-color);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    cursor: move;
+}
+
+.adjuster-container * {
+    position: absolute;
+}
+
+.adjuster-dragger {
+    height: 100%;
+    width: 100%;
+}
+
+.adjuster.line {
+    background: none;
+}
+
+.adjuster.line.left {
+    cursor: ew-resize;
+    width: var(--adjuster-line-size);
+    height: 100%;
+    left: var(--adjuster-line-offset);
+}
+.adjuster.line.top {
+    cursor: ns-resize;
+    height: var(--adjuster-line-size);
+    width: 100%;
+    top: var(--adjuster-line-offset);
+}
+.adjuster.line.right {
+    cursor: ew-resize;
+    width: var(--adjuster-line-size);
+    height: 100%;
+    right: var(--adjuster-line-offset);
+}
+.adjuster.line.bottom {
+    cursor: ns-resize;
+    height: var(--adjuster-line-size);
+    width: 100%;
+    bottom: var(--adjuster-line-offset);
+}
+
+.adjuster.square {
+    width: var(--adjuster-square-size);
+    height: var(--adjuster-square-size);
+    border: 1px solid lightgrey;
+    position: absolute;
+    background: white;
+}
+
+.adjuster.square {
+    border-radius: 50%;
+}
+
+.adjuster.square.top {
+    top: var(--adjuster-square-offset);
+}
+.adjuster.square.right {
+    right: var(--adjuster-square-offset);
+}
+.adjuster.square.bottom {
+    bottom: var(--adjuster-square-offset);
+}
+.adjuster.square.left {
+    left: var(--adjuster-square-offset);
+}
+
+.adjuster.square.top.left {
+    cursor: nwse-resize;
+}
+.adjuster.square.top.right {
+    cursor: nesw-resize;
+}
+.adjuster.square.bottom.right {
+    cursor: nwse-resize;
+}
+.adjuster.square.bottom.left {
+    cursor: nesw-resize;
+}
+
+.dimensions {
+    bottom: -1.4rem;
+    font-size: 0.6rem;
+    background: var(--highlight-color);
+    color: white;
+    padding: 0 0.1rem 0.1rem;
+    border-radius: 5px;
+    display: flex;
+    transform: translateX(-50%);
+    left: 50%;
+    min-width: 50px;
+    justify-content: center;
+}
