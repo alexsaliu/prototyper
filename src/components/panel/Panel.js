@@ -3,6 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import './panel.css';
 
+import { ReactComponent as Toggle } from './paneltoggle.svg';
+import { ReactComponent as Caret } from './caret.svg';
+
 import {
     setCanvasSize,
     updateElements,
@@ -12,6 +15,7 @@ import {
 const Panel = () => {
     const [width, setWidth] = useState('');
     const [height, setHeight] = useState('');
+    const [sidebarItem, setSidebarItem] = useState(1);
 
     const canvasSize = useSelector(state => state.editor.canvasSize);
     const selectedId = useSelector(state => state.editor.selectedElementId);
@@ -59,14 +63,42 @@ const Panel = () => {
     }
 
     return (
-        <div className="panel">
-            <div>
-                <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
-                <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
-                <button onClick={() => updateCanvasSize()}>Update</button>
-                <button onClick={() => addElement()}>Add Element</button>
-                <button onClick={() => deleteElement()}>Delete Element</button>
+        <div className="side-panel">
+            <div className="sidebar">
+                {
+                    sidebarItem ?
+                    <div style={{top: `${sidebarItem * 72 - 72}px`}} className="sidebar-item-cover"></div>
+                    : ''
+                }
+                <div onClick={() => setSidebarItem(1)} className="sidebar-item">
+                    Item 1
+                </div>
+                <div onClick={() => setSidebarItem(2)} className="sidebar-item">
+                    Item 1
+                </div>
+                <div onClick={() => setSidebarItem(3)} className="sidebar-item">
+                    Item 1
+                </div>
             </div>
+            {
+                sidebarItem ?
+                <div className="panel">
+                    <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
+                    <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
+                    <button onClick={() => updateCanvasSize()}>Update</button>
+                    <button onClick={() => addElement()}>Add Element</button>
+                    <button onClick={() => deleteElement()}>Delete Element</button>
+                </div>
+                : ''
+            }
+            {
+                sidebarItem ?
+                <div onClick={() => {setSidebarItem(0)}} className="panel-toggle">
+                    <Toggle />
+                    <Caret className="caret" />
+                </div>
+                : ''
+            }
         </div>
     );
 }

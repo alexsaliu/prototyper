@@ -13,8 +13,11 @@ const Editor = () => {
             <Header />
             <div className="panel-canvas-container">
                 <Panel />
-                <div className="canvas-container">
-                    <Canvas />
+                <div className="canvas-header-container">
+                    <div className="canvas-header"></div>
+                    <div className="canvas-container">
+                        <Canvas />
+                    </div>
                 </div>
             </div>
         </div>

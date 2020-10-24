@@ -1,5 +1,71 @@
 .panel {
     height: 100%;
-    width: 300px;
+    width: 350px;
     background: #293039;
+}
+
+.side-panel {
+    display: flex;
+    position: relative;
+}
+
+.sidebar {
+    width: 70px;
+    overflow-y: auto;
+    background: #0e1318;
+    position: relative;
+}
+
+.sidebar-item {
+    width: 70px;
+    height: 70px;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.sidebar-item-cover {
+    height: 70px;
+    width: 70px;
+    background: #293039;
+    position: absolute;
+    cursor: pointer;
+    transition: top 0.25s ease-in-out;
+}
+
+.sidebar-item-cover::before, .sidebar-item-cover::after {
+    right: 0px;
+    top: -8px;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle closest-side,transparent 0,transparent 50%,#293039 0) 200% 200%/400% 400%;
+    content: "";
+    position: absolute;
+}
+
+.sidebar-item-cover::after {
+    top: unset;
+    bottom: -8px;
+    transform: scaleY(-1);
+}
+
+.panel-toggle {
+    position: absolute;
+    width: 32px;
+    right: -32px;
+    top: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.caret {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
 }
