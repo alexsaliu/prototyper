@@ -3,13 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import './panel.css';
 
+import ColorPanel from './ColorPanel.js';
 import { ReactComponent as Toggle } from './paneltoggle.svg';
 import { ReactComponent as Caret } from './caret.svg';
 
 import {
     setCanvasSize,
     updateElements,
-    setSelectedElementId
+    setSelectedElementId,
+    toggleColorPanel
 } from '../../store/actions/actions.js';
 
 const Panel = () => {
@@ -20,6 +22,7 @@ const Panel = () => {
     const canvasSize = useSelector(state => state.editor.canvasSize);
     const selectedId = useSelector(state => state.editor.selectedElementId);
     const elements = useSelector(state => state.editor.elements);
+    const colorPanel = useSelector(state => state.editor.colorPanel);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -27,10 +30,9 @@ const Panel = () => {
         setHeight(canvasSize[1])
     }, [canvasSize])
 
-    // useEffect(() => {
-    //     console.log(elements);
-    //     console.log(selectedId);
-    // }, [elements, selectedId])
+    useEffect(() => {
+        dispatch(toggleColorPanel(false))
+    }, [sidebarItem])
 
     const updateCanvasSize = () => {
         if (isNaN(width) || isNaN(height)) return;
@@ -66,7 +68,7 @@ const Panel = () => {
         <div className="side-panel">
             <div className="sidebar">
                 {
-                    sidebarItem ?
+                    sidebarItem && !colorPanel ?
                     <div style={{top: `${sidebarItem * 72 - 72}px`}} className="sidebar-item-cover"></div>
                     : ''
                 }
@@ -92,7 +94,10 @@ const Panel = () => {
                 : ''
             }
             {
-                sidebarItem ?
+                colorPanel ? <ColorPanel /> : ''
+            }
+            {
+                sidebarItem && !colorPanel ?
                 <div onClick={() => {setSidebarItem(0)}} className="panel-toggle">
                     <Toggle />
                     <Caret className="caret" />

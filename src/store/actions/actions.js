@@ -2,7 +2,8 @@ import {
     SET_MOUSE_POSITION,
     UPDATE_ELEMENTS,
     SET_SELECTED_ELEMENT_ID,
-    SET_CANVAS_SIZE
+    SET_CANVAS_SIZE,
+    TOGGLE_COLOR_PANEL
 } from '../constants.js';
 
 export const setMousePosition = (coords) => {
@@ -29,6 +30,13 @@ export const setSelectedElementId = (id) => {
 export const setCanvasSize = (bool) => {
     return {
         type: SET_CANVAS_SIZE,
+        payload: bool,
+    }
+}
+
+export const toggleColorPanel = (bool) => {
+    return {
+        type: TOGGLE_COLOR_PANEL,
         payload: bool,
     }
 }

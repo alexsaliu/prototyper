@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import './canvas.css';
-import Element from './element/Element.js';
+import Element from '../element/Element.js';
 
 import {
     setSelectedElementId,
     updateElements
-} from '../store/actions/actions.js';
+} from '../../store/actions/actions.js';
 
 const Canvas = () => {
     const canvasSize = useSelector(state => state.editor.canvasSize);

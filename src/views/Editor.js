@@ -4,7 +4,8 @@ import './editor.css';
 
 import Header from '../components/header/Header.js';
 import Panel from '../components/panel/Panel.js';
-import Canvas from '../components/Canvas.js';
+import Canvas from '../components/canvasArea/Canvas.js';
+import CanvasHeader from '../components/canvasArea/CanvasHeader.js';
 
 const Editor = () => {
 
@@ -14,7 +15,7 @@ const Editor = () => {
             <div className="panel-canvas-container">
                 <Panel />
                 <div className="canvas-header-container">
-                    <div className="canvas-header"></div>
+                    <CanvasHeader />
                     <div className="canvas-container">
                         <Canvas />
                     </div>
