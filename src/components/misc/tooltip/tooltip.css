@@ -1,0 +1,27 @@
+.tooltip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.tooltip-content {
+    color: #ffffff;
+    font-size: 12px;
+    width: max-content;
+    background: #0e1318;
+    padding: 5px 7px;
+    border-radius: 4px;
+    font-weight: 300;
+}
+
+.tooltip-arrow {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #0e1318;
+    width: 22px;
+    position: absolute;
+}
