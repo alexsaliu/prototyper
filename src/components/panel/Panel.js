@@ -30,9 +30,10 @@ const Panel = () => {
         setHeight(canvasSize[1])
     }, [canvasSize])
 
-    useEffect(() => {
+    const handelSideBarClick = (item) => {
+        setSidebarItem(item)
         dispatch(toggleColorPanel(false))
-    }, [sidebarItem])
+    }
 
     const updateCanvasSize = () => {
         if (isNaN(width) || isNaN(height)) return;
@@ -72,13 +73,13 @@ const Panel = () => {
                     <div style={{top: `${sidebarItem * 72 - 72}px`}} className="sidebar-item-cover"></div>
                     : ''
                 }
-                <div onClick={() => setSidebarItem(1)} className="sidebar-item">
+                <div onClick={() => handelSideBarClick(1)} className="sidebar-item">
                     Item 1
                 </div>
-                <div onClick={() => setSidebarItem(2)} className="sidebar-item">
+                <div onClick={() => handelSideBarClick(2)} className="sidebar-item">
                     Item 1
                 </div>
-                <div onClick={() => setSidebarItem(3)} className="sidebar-item">
+                <div onClick={() => handelSideBarClick(3)} className="sidebar-item">
                     Item 1
                 </div>
             </div>
