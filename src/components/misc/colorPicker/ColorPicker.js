@@ -4,63 +4,34 @@ import './colorPicker.css';
 
 const ColorPicker = () => {
     const [color, setColor] = useState('#FF0000');
+    const [backgroundRgb, setBackgroundRgb] = useState([255, 0, 0]);
     const [selectorPosition, setSelectorPosition] = useState([20, 20]);
-    const [moveColorSelector, setMoveColorSelector] = useState(false);
-    const [startingMouse, setStartingMouse] = useState(false);
-    const [mousePosition, setMousePosition] = useState(false);
-
     const [colorSliderValue, setColorSliderValue] = useState(0);
 
     useEffect(() => {
-        // if (startingMouse) {
-        //     const backgroundRgb = convert(color);
-        //     console.log("backgroundRgb: ", backgroundRgb);
-        //     let newRgb = [0,0,0];
-        //     for (let i = 0; i < 3; i++) {
-        //         const axisDistanceFromRight = 255 - newPosition[0];
-        //         const percentageDecimalFromRight = axisDistanceFromRight / 255;
-        //         const axisRgbRange = 255 - backgroundRgb[i];
-        //         const rgb = percentageDecimalFromRight * axisRgbRange + backgroundRgb[i];
-        //         newRgb[i] = Math.round(rgb);
-        //     }
-        //     for (let i = 0; i < 3; i++) {
-        //         const axisDistanceFromTop = newPosition[1];
-        //         const percentageDecimalFromTop = axisDistanceFromTop / 125;
-        //         const axisRgbRange = newRgb[i];
-        //         const rgb = newRgb[i] - percentageDecimalFromTop * axisRgbRange;
-        //         newRgb[i] = Math.round(rgb);
-        //     }
-        //     console.log("newRgb: ", newRgb);
-        //     console.log("CONVERTED: ", convert(newRgb));
-        //     setColor(convert(newRgb))
-        //
-        //     // left
-        //     setNewSelectorPosition(newPosition);
-        // }
-        // // calculate rgb value
-    }, [mousePosition])
-
-    // mouse down set dragging and get starting mouse POSITION
-    // get y proportion
-    // get x proportion
-
-    // move
-
-
-    // mouse move get mouse position and compare to starting position
-    // adjust x and y
-
-    const getMouseCoords = (e) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        return [x, y];
-    }
-
-    const trackMouse = (e) => {
-        if (startingMouse) {
-            setMousePosition(getMouseCoords(e));
-        }
-    }
+            console.log("backgroundRgb: ", backgroundRgb);
+            let newRgb = [0,0,0];
+            for (let i = 0; i < 3; i++) {
+                const distanceFromRight = 260 - selectorPosition[0];
+                const percentageDecimalFromRight = distanceFromRight / 260;
+                const rgbRange = 255 - backgroundRgb[i];
+                const rgb = percentageDecimalFromRight * rgbRange + backgroundRgb[i];
+                newRgb[i] = Math.round(rgb);
+            }
+            for (let i = 0; i < 3; i++) {
+                const distanceFromTop = selectorPosition[1];
+                const percentageDecimalFromTop = distanceFromTop / 104;
+                const rgbRange = newRgb[i];
+                const rgb = newRgb[i] - percentageDecimalFromTop * rgbRange;
+                newRgb[i] = Math.round(rgb);
+            }
+            console.log("newRgb: ", newRgb);
+            // console.log("CONVERTED: ", convert(newRgb));
+            setColor(convert(newRgb));
+            console.log(selectorPosition[0]);
+            console.log(selectorPosition[1]);
+            
+    }, [selectorPosition])
 
     const changeHex = (val) => {
         setColor(val);
@@ -85,22 +56,36 @@ const ColorPicker = () => {
         }
     }
 
-    const windowMouseMove = (e) => {
-        console.log(document.querySelector('.containerTop').getBoundingClientRect());
-        setSelectorPosition(position => {
-            let x = position[0] + e.movementX;
-            let y = position[1] + e.movementY;
-            // if (x > 260 || e.offsetX > 260) x = 260
-            // if (x < 0 || e.offsetX < 0) x = 0
-            // if (y > 104 || e.offsetY > 104) y = 104
-            // if (y < 0 || e.offsetY < 0) y = 0
-            return [x, y]
-        })
+    const moveColorSelector = (rect) => {
+        return (e) => {
+            setSelectorPosition(position => {
+                let x = position[0] + e.movementX;
+                let y = position[1] + e.movementY;
+                if (e.clientY < rect.top + 4) y = 0
+                if (e.clientY > rect.top + rect.height - 8) y = 104
+                if (e.clientX < rect.left + 4) x = 0
+                if (e.clientX > rect.left + rect.width - 8) x = 260
+                return [x, y]
+            })
+        }
     }
 
-    const handelColorSlider = () => {
+    const setInitialPosition = (e, rect) => {
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        x = x > 260 ? 260 : x;
+        y = y > 104 ? 104 : y;
+        return [x, y];
+    }
+
+    const handelColorSlider = (e) => {
+        const rect = document.querySelector('.containerTop').getBoundingClientRect();
+        setSelectorPosition(setInitialPosition(e, rect));
+        const windowMouseMove = moveColorSelector(rect);
+        document.querySelector('.containerTop').style.cursor = 'none';
         window.addEventListener('mousemove', windowMouseMove);
         window.addEventListener('mouseup', function mouseup() {
+            document.querySelector('.containerTop').style.cursor = 'unset';
             window.removeEventListener('mousemove', windowMouseMove);
             window.removeEventListener('mouseup', mouseup);
         })
@@ -110,10 +95,10 @@ const ColorPicker = () => {
         <div className="containerOuter">
             <div>
                 <div
-                    onMouseDown={(e) => {handelColorSlider(); setSelectorPosition([e.nativeEvent.offsetX, e.nativeEvent.offsetY])}}
+                    onMouseDown={(e) => handelColorSlider(e)}
                     className="containerTop"
                 >
-                    <div className="backgroundContainer" style={{background: color}}></div>
+                    <div className="backgroundContainer" style={{background: `rgb(${backgroundRgb[0]}, ${backgroundRgb[1]}, ${backgroundRgb[2]})`}}></div>
                     <div className="backgroundWhite"></div>
                     <div className="backgroundBlack"></div>
                     <div className="colorSelector" style={{left: `${selectorPosition[0]}px` ,top: `${selectorPosition[1]}px`,}}></div>

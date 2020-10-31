@@ -27,12 +27,6 @@
     height: 100%
 }
 
-.sampleColor {
-    width: 100%;
-    height: 100%;
-    border-radius: 5px
-}
-
 .hexInput {
     border: 1px solid lightgrey;
     width: 100%;
