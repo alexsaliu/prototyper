@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Color from './Color.js';
+import ColorPicker from '../misc/colorPicker/ColorPicker.js';
 import './colorPanel.css';
 
 import {
@@ -44,11 +45,15 @@ const ColorPanel = () => {
 
     return (
         <div className="color-panel">
-            <div className="color-section">
+            <ColorPicker />
+            {/* <div className="color-section">
                 <div className="color-title">New color</div>
                 <div className="color-container">
                     <div className="color color-rainbow">
                         <div className="rainbow"></div>
+                    </div>
+                    <div className="colorpicker-container">
+                        <ColorPicker />
                     </div>
                 </div>
             </div>
@@ -67,7 +72,7 @@ const ColorPanel = () => {
                         <Color color={color} key={i} offsetTooltip={determineTooltipOffset(i + 1, color)} />
                     )}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

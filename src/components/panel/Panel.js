@@ -95,7 +95,7 @@ const Panel = () => {
                 : ''
             }
             {
-                colorPanel ? <ColorPanel /> : ''
+                colorPanel || true ? <ColorPanel /> : ''
             }
             {
                 sidebarItem && !colorPanel ?

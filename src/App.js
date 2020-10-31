@@ -1,7 +1,6 @@
 import React from 'react';
 import './index.css';
 import Editor from './views/Editor.js';
-import ColorPicker from './components/colorPicker/ColorPicker.js';
 
 function App() {
     return (
