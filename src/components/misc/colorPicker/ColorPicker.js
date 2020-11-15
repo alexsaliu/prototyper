@@ -10,47 +10,35 @@ const ColorPicker = () => {
 
     useEffect(() => {
         console.log(baseRgb);
-        
-    }, [baseRgb])
+        const newRgb = calculateNewRgb(baseRgb, selectorPosition[0], selectorPosition[1]);
+        setColor(convert(newRgb));
+    }, [baseRgb, selectorPosition])
 
-    useEffect(() => {
-        // h 360 - 0
-        // s 0 - 100% left to right
-        // l 0 - 50% bottom to top | 0 - 50 right to left
-
-        // let s = selectorPosition[0] / 260 * 100;
-        // const ly = Math.round((100 - selectorPosition[0] / 260 * 100) / 2);
-        // const lx = Math.round((100 - selectorPosition[1] / 104 * 100) / 2);
-        // let l = ly + lx;
-
-        // const hex = hslToHex(360, s, l);
-        // console.log(hex);
-        // console.log("s: ", s);
-        // console.log("l: ", l);
-
-            console.log("backgroundRgb: ", baseRgb);
-            let newRgb = [0,0,0];
-            for (let i = 0; i < 3; i++) {
-                const distanceFromRight = 260 - selectorPosition[0];
-                const percentageDecimalFromRight = distanceFromRight / 260;
-                const rgbRange = 255 - baseRgb[i];
-                const rgb = percentageDecimalFromRight * rgbRange + baseRgb[i];
-                newRgb[i] = Math.round(rgb);
-            }
-            for (let i = 0; i < 3; i++) {
-                const distanceFromTop = selectorPosition[1];
-                const percentageDecimalFromTop = distanceFromTop / 104;
-                const rgbRange = newRgb[i];
-                const rgb = newRgb[i] - percentageDecimalFromTop * rgbRange;
-                newRgb[i] = Math.round(rgb);
-            }
-            console.log("CONVERTED: ", convert(newRgb));
-            setColor(convert(newRgb));
-
-    }, [selectorPosition])
+    const calculateNewRgb = (baseRgb, xPosition, yPosition, width=260, height=104) => {
+        let newRgb = [0,0,0];
+        for (let i = 0; i < 3; i++) {
+            const distanceFromRight = width - xPosition;
+            const percentageDecimalFromRight = distanceFromRight / width;
+            const rgbRange = 255 - baseRgb[i];
+            const rgb = percentageDecimalFromRight * rgbRange + baseRgb[i];
+            newRgb[i] = Math.round(rgb);
+        }
+        for (let i = 0; i < 3; i++) {
+            const distanceFromTop = yPosition;
+            const percentageDecimalFromTop = distanceFromTop / height;
+            const rgbRange = newRgb[i];
+            const rgb = newRgb[i] - percentageDecimalFromTop * rgbRange;
+            newRgb[i] = Math.round(rgb);
+        }
+        return newRgb
+    }
 
     const changeHex = (val) => {
+        if (!val) return;
         setColor(val);
+        const rgb = convert(val);
+        const newHsl = rgbToHsl(...rgb);
+        setColorSliderValue(newHsl[0] * 360)
     }
 
     const convert = (val) => {
@@ -125,6 +113,29 @@ const ColorPicker = () => {
         }
     
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
+    function rgbToHsl(r, g, b){
+        r /= 255
+        g /= 255
+        b /= 255
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, l = (max + min) / 2;
+    
+        if(max == min){
+            h = s = 0; // achromatic
+        }else{
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch(max){
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+    
+        return [h, s, l];
     }
 
     const moveColorSelector = (rect) => {
