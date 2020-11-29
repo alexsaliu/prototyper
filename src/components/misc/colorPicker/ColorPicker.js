@@ -7,14 +7,17 @@ const WIDTH = 260
 const HEIGHT = 104
 
 const ColorPicker = () => {
-    const [color, setColor] = useState('FF0000')
+    const [color, setColor] = useState('#FF0000')
     const [baseRgb, setBaseRgb] = useState([255, 0, 0])
     const [selectorPosition, setSelectorPosition] = useState([WIDTH, 0])
     const [colorSliderValue, setColorSliderValue] = useState(0)
+    const [changingHexInput, setChangingHexInput] = useState(false)
 
     useEffect(() => {
-        const newRgb = calculateNewRgb(baseRgb, selectorPosition[0], selectorPosition[1])
-        setColor(convert.rgb.hex(newRgb))
+        if (!changingHexInput) {
+            const newRgb = calculateNewRgb(baseRgb, selectorPosition[0], selectorPosition[1])
+            setColor('#' + convert.rgb.hex(newRgb))
+        }
     }, [baseRgb, selectorPosition])
 
     const calculateNewRgb = (baseRgb, xPosition, yPosition, width=WIDTH, height=HEIGHT) => {
@@ -37,7 +40,11 @@ const ColorPicker = () => {
     }
 
     const changeHex = (val) => {
-        if (!val) return
+        if (val.length < 1) val = '#'
+        if (val.length > 7) val = '#' + val.slice(1, 7)
+        if (val.length > 0 && val.length < 7) {
+            if (!val.includes('#')) return
+        }
         setColor(val)
         const hsl = convert.hex.hsl(val)
         setColorSliderValue(hsl[0])
@@ -101,7 +108,7 @@ const ColorPicker = () => {
                 <div className="colorSliderBar">
                     <input onChange={(e) => {setBaseRgb(convert.hsl.rgb(parseInt(e.target.value), 100, 50)); setColorSliderValue(e.target.value)}} value={colorSliderValue} className="inputSlider" type="range" min="0" max="360"/>
                 </div>
-                <input onChange={(e) => changeHex(e.target.value)} className="hexInput" value={color} type="text" />
+                <input onBlur={() => setChangingHexInput(false)} onFocus={() => setChangingHexInput(true)} onChange={(e) => changeHex(e.target.value)} className="hexInput" value={color} type="text" />
             </div>
         </div>
     );
