@@ -11,6 +11,7 @@ import {
     setCanvasSize,
     updateElements,
     setSelectedElementId,
+    setHoveredElementId,
     toggleColorPanel
 } from '../../store/actions/actions.js';
 
@@ -43,9 +44,9 @@ const Panel = () => {
     const addElement = () => {
         const id = elements.length
         const newElement = {
-            'id': id,
-            'type': 'div',
-            'styles': {
+            id,
+            type: 'div',
+            styles: {
                 'left': '0px',
                 'top': '0px',
                 'width': '200px',
@@ -54,6 +55,7 @@ const Panel = () => {
                 'position': 'absolute',
                 'boxSizing': 'borderBox',
             },
+            children: []
         }
         dispatch(updateElements(elements.concat(newElement)))
         dispatch(setSelectedElementId(id))
@@ -62,7 +64,12 @@ const Panel = () => {
     const deleteElement = () => {
         const updatedElements = [...elements]
         updatedElements.splice(selectedId, 1)
+        dispatch(setSelectedElementId(-1))
         dispatch(updateElements(updatedElements));
+    }
+
+    const test = () => {
+        console.log("test");
     }
 
     return (
@@ -77,14 +84,14 @@ const Panel = () => {
                     Item 1
                 </div>
                 <div onClick={() => handelSideBarClick(2)} className="sidebar-item">
-                    Item 1
+                    Item 2
                 </div>
                 <div onClick={() => handelSideBarClick(3)} className="sidebar-item">
-                    Item 1
+                    Item 3
                 </div>
             </div>
             {
-                sidebarItem ?
+                sidebarItem === 1 ?
                 <div className="panel">
                     <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
                     <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
@@ -95,7 +102,28 @@ const Panel = () => {
                 : ''
             }
             {
-                colorPanel || true ? <ColorPanel /> : ''
+                sidebarItem === 2 ?
+                <div className="panel">
+                    {elements.map((element, i) =>
+                        <div
+                        key={i}
+                        className="panel-element"
+                        style={{background: selectedId === i ? '#0e1318': ''}}
+                        onClick={() => dispatch(setSelectedElementId(i))}
+                        onMouseEnter={() => dispatch(setHoveredElementId(i))}
+                        onMouseLeave={() => dispatch(setHoveredElementId(-1))}
+                        >
+                            <div style={{background: selectedId === i ? 'var(--highlight-color)': ''}} className="panel-element-icon">
+                            </div>
+                            <div onChange={() => test()} className="panel-element-name">
+                                element {i}
+                            </div>
+                        </div>)}
+                </div>
+                : ''
+            }
+            {
+                colorPanel ? <ColorPanel /> : ''
             }
             {
                 sidebarItem && !colorPanel ?

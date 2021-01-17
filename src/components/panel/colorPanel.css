@@ -17,6 +17,12 @@
     padding: 0px 15px;
 }
 
+.colorpicker-container {
+    position: absolute;
+    z-index: 1;
+    transform: translate(6px, 56px);
+}
+
 .color-title {
     color: #0e1318b3;
     text-align: left;

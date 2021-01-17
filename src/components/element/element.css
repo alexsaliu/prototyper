@@ -1,0 +1,8 @@
+.hover-border {
+    border: 2px solid var(--highlight-color);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    box-sizing: content-box;
+    transform: translate(-2px, -2px);
+}

@@ -17,6 +17,7 @@ const ColorPanel = () => {
         '#03989e', '#00c2cb', '#5ce1e6', '#38b6ff', '#5271ff', '#004aad',
         '#008037', '#7ed957', '#c9e265', '#ffdf5a', '#ffbd59', '#ff914d']
     );
+    const [showColorPicker, setShowColorPicker] = useState(false)
 
     const colorPanel = useSelector(state => state.editor.colorPanel);
     const elements = useSelector(state => state.editor.elements);
@@ -45,16 +46,15 @@ const ColorPanel = () => {
 
     return (
         <div className="color-panel">
-            <ColorPicker />
-            {/* <div className="color-section">
+            <div className="color-section">
                 <div className="color-title">New color</div>
                 <div className="color-container">
-                    <div className="color color-rainbow">
+                    <div onClick={() => setShowColorPicker(!showColorPicker)} className="color color-rainbow">
                         <div className="rainbow"></div>
                     </div>
-                    <div className="colorpicker-container">
+                    {showColorPicker ? <div className="colorpicker-container">
                         <ColorPicker />
-                    </div>
+                    </div>: ''}
                 </div>
             </div>
             <div className="color-section">
@@ -72,7 +72,7 @@ const ColorPanel = () => {
                         <Color color={color} key={i} offsetTooltip={determineTooltipOffset(i + 1, color)} />
                     )}
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 }

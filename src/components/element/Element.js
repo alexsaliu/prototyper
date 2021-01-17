@@ -12,6 +12,7 @@ import {
 const Element = ({id}) => {
     const elements = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
+    const hoveredId = useSelector(state => state.editor.hoveredElementId);
     const dispatch = useDispatch();
 
     return (
@@ -20,6 +21,7 @@ const Element = ({id}) => {
             style={elements[id].styles}
             onClick={() => dispatch(setSelectedElementId(id))}
         >
+            {hoveredId === id ? <div class="hover-border"></div> : ''}
             {selectedId === id ? <Adjuster /> : ''}
         </div>
     );

@@ -69,3 +69,28 @@
     transform: translate(-50%, -50%);
     color: white;
 }
+
+/**/
+
+.panel-element {
+    display: flex;
+    align-items: center;
+    height: 32px;
+}
+
+.panel-element:hover {
+    box-shadow: inset 0 0 0 1px lightblue;
+}
+
+.panel-element-icon {
+    width: 6px;
+    height: 6px;
+    background: #e1e1e1;
+    margin: 0 10px 0 15px;
+}
+
+.panel-element-name {
+    color: #e1e1e1;
+    font-size: 12px;
+    transform: translateY(-1px);
+}
