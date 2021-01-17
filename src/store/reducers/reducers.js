@@ -4,7 +4,8 @@ import {
     SET_SELECTED_ELEMENT_ID,
     SET_HOVERED_ELEMENT_ID,
     SET_CANVAS_SIZE,
-    TOGGLE_COLOR_PANEL
+    TOGGLE_COLOR_PANEL,
+    UPDATE_RECENT_COLORS
 } from '../constants.js';
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
     elements: JSON.parse(localStorage.getItem('elements')) || [],
     selectedElementId: -1,
     hoveredElementId: -1,
-    colorPanel: false
+    colorPanel: false,
+    recentColors: []
 }
 
 export const editorReducer = (state = initialState, action = {}) => {
@@ -31,6 +33,13 @@ export const editorReducer = (state = initialState, action = {}) => {
             return {...state, canvasSize: action.payload};
         case TOGGLE_COLOR_PANEL:
             return {...state, colorPanel: action.payload};
+        case UPDATE_RECENT_COLORS:
+            let colors = [...state.recentColors]
+            colors.unshift(action.payload)
+            if (state.recentColors.length === 6) {
+                colors.pop()
+            }
+            return {...state, recentColors: colors};
         default:
             return state;
     }

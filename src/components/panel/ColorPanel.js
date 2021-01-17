@@ -21,6 +21,7 @@ const ColorPanel = () => {
 
     const colorPanel = useSelector(state => state.editor.colorPanel);
     const elements = useSelector(state => state.editor.elements);
+    const recentColors = useSelector(state => state.editor.recentColors);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -61,6 +62,14 @@ const ColorPanel = () => {
                 <div className="color-title">Document colors</div>
                 <div className="color-container">
                     {documentColors.map((color, i) =>
+                        <Color color={color} key={i} offsetTooltip={determineTooltipOffset(i + 1, color)} />
+                    )}
+                </div>
+            </div>
+            <div className="color-section">
+                <div className="color-title">Recent colors</div>
+                <div className="color-container">
+                    {recentColors.map((color, i) =>
                         <Color color={color} key={i} offsetTooltip={determineTooltipOffset(i + 1, color)} />
                     )}
                 </div>

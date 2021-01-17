@@ -7,6 +7,7 @@ import './colorPanel.css';
 
 import {
     updateElements,
+    updateRecentColors,
 } from '../../store/actions/actions.js';
 
 const Color = ({color, offsetTooltip}) => {
@@ -35,6 +36,7 @@ const Color = ({color, offsetTooltip}) => {
         styles.background = color;
         elementsCopy[selectedId].styles = styles;
         dispatch(updateElements(elementsCopy))
+        dispatch(updateRecentColors(color))
     }
 
     return (

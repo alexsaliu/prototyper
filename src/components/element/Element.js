@@ -21,7 +21,7 @@ const Element = ({id}) => {
             style={elements[id].styles}
             onClick={() => dispatch(setSelectedElementId(id))}
         >
-            {hoveredId === id ? <div class="hover-border"></div> : ''}
+            {hoveredId === id ? <div className="hover-border"></div> : ''}
             {selectedId === id ? <Adjuster /> : ''}
         </div>
     );

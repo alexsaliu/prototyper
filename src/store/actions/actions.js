@@ -4,7 +4,8 @@ import {
     SET_SELECTED_ELEMENT_ID,
     SET_HOVERED_ELEMENT_ID,
     SET_CANVAS_SIZE,
-    TOGGLE_COLOR_PANEL
+    TOGGLE_COLOR_PANEL,
+    UPDATE_RECENT_COLORS
 } from '../constants.js';
 
 export const setMousePosition = (coords) => {
@@ -41,5 +42,11 @@ export const toggleColorPanel = (bool) => {
     return {
         type: TOGGLE_COLOR_PANEL,
         payload: bool,
+    }
+}
+export const updateRecentColors = (color) => {
+    return {
+        type: UPDATE_RECENT_COLORS,
+        payload: color,
     }
 }
