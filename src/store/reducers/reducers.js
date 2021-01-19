@@ -21,26 +21,21 @@ const initialState = {
 export const editorReducer = (state = initialState, action = {}) => {
     switch (action.type) {
         case SET_MOUSE_POSITION:
-            return {...state, mousePosition: action.payload};
+            return {...state, mousePosition: action.payload}
         case UPDATE_ELEMENTS:
             localStorage.setItem('elements', JSON.stringify(action.payload))
-            return {...state, elements: action.payload};
+            return {...state, elements: action.payload}
         case SET_SELECTED_ELEMENT_ID:
-            return {...state, selectedElementId: action.payload};
+            return {...state, selectedElementId: action.payload}
         case SET_HOVERED_ELEMENT_ID:
-            return {...state, hoveredElementId: action.payload};
+            return {...state, hoveredElementId: action.payload}
         case SET_CANVAS_SIZE:
-            return {...state, canvasSize: action.payload};
+            return {...state, canvasSize: action.payload}
         case TOGGLE_COLOR_PANEL:
-            return {...state, colorPanel: action.payload};
+            return {...state, colorPanel: action.payload}
         case UPDATE_RECENT_COLORS:
-            let colors = [...state.recentColors]
-            colors.unshift(action.payload)
-            if (state.recentColors.length === 6) {
-                colors.pop()
-            }
-            return {...state, recentColors: colors};
+            return {...state, recentColors: action.payload}
         default:
-            return state;
+            return state
     }
 }

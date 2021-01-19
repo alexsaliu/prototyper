@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import './editor.css';
+
+import {
+    setSelectedElementId,
+} from '../store/actions/actions.js';
 
 import Header from '../components/header/Header.js';
 import Panel from '../components/panel/Panel.js';
@@ -9,6 +13,12 @@ import CanvasHeader from '../components/canvasArea/CanvasHeader.js';
 
 const Editor = () => {
 
+    const dispatch = useDispatch()
+
+    const unSelectElements = () => {
+        dispatch(setSelectedElementId(-1))
+    }
+
     return (
         <div className="editor">
             <Header />
@@ -16,7 +26,7 @@ const Editor = () => {
                 <Panel />
                 <div className="canvas-header-container">
                     <CanvasHeader />
-                    <div className="canvas-container">
+                    <div onClick={() => unSelectElements()} className="canvas-container">
                         <Canvas />
                     </div>
                 </div>

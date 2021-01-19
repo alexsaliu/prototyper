@@ -51,7 +51,7 @@ const Panel = () => {
                 'top': '0px',
                 'width': '200px',
                 'height': '100px',
-                'border': '1px solid grey',
+                'background': '#293039',
                 'position': 'absolute',
                 'boxSizing': 'borderBox',
             },

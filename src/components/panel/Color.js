@@ -15,6 +15,7 @@ const Color = ({color, offsetTooltip}) => {
 
     const selectedId = useSelector(state => state.editor.selectedElementId);
     const elements = useSelector(state => state.editor.elements);
+    const recentColors = useSelector(state => state.editor.recentColors);
 
     const dispatch = useDispatch();
 
@@ -36,7 +37,22 @@ const Color = ({color, offsetTooltip}) => {
         styles.background = color;
         elementsCopy[selectedId].styles = styles;
         dispatch(updateElements(elementsCopy))
-        dispatch(updateRecentColors(color))
+        let ok = [...recentColors]
+        ok.push(color)
+        dispatch(updateRecentColors(ok))
+        handelRecentColors(color)
+    }
+
+    const handelRecentColors = (color) => {
+        let colors = [...recentColors]
+        if (colors.includes(color)) {
+            colors.splice(colors.indexOf(color), 1)
+        }
+        else if (colors.length === 6) {
+            colors.pop()
+        }
+        colors.unshift(color)
+        dispatch(updateRecentColors(colors))
     }
 
     return (
