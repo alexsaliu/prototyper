@@ -16,7 +16,7 @@ const Editor = () => {
     const dispatch = useDispatch()
 
     const unSelectElements = () => {
-        dispatch(setSelectedElementId(-1))
+        dispatch(setSelectedElementId(''))
     }
 
     return (

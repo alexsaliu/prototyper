@@ -9,11 +9,11 @@ import {
 } from '../constants.js';
 
 const initialState = {
-    canvasSize: [800, 235],
+    canvasSize: [960, 540],
     mousePosition: [0,0],
     elements: JSON.parse(localStorage.getItem('elements')) || [],
-    selectedElementId: -1,
-    hoveredElementId: -1,
+    selectedElementId: '',
+    hoveredElementId: '',
     colorPanel: false,
     recentColors: []
 }

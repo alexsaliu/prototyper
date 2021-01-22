@@ -1,56 +1,62 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { getNumericValue } from '../../../helpers.js';
-import { calcElementAdjustment } from './movement.js';
+import { getElement } from '../../../helpers.js'
+import { calcElementAdjustment } from './movement.js'
 
-import './adjuster.css';
+import './adjuster.css'
 
 import {
     updateElements,
     setSelectedElementId
-} from '../../../store/actions/actions.js';
+} from '../../../store/actions/actions.js'
 
 const Adjuster = () => {
-    const [adjusterStyles, setAdjusterStyles] = useState({});
-    const [top, setTop] = useState(false);
-    const [left, setLeft] = useState(false);
+    const [adjusterStyles, setAdjusterStyles] = useState({})
+    const [top, setTop] = useState(false)
+    const [left, setLeft] = useState(false)
+    const [styles, setStyles] = useState({})
 
-    const selectedId = useSelector(state => state.editor.selectedElementId);
-    const elements = useSelector(state => state.editor.elements);
-    const dispatch = useDispatch();
+    const selectedId = useSelector(state => state.editor.selectedElementId)
+    const elements = useSelector(state => state.editor.elements)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        let adjuster = {};
-        let styles = elements[selectedId].styles;
-        let parentBorder = styles.border ? getNumericValue(styles.border) : 0;
-        let left = getNumericValue(styles.left) - parentBorder / 2;
-        let top = getNumericValue(styles.top) - parentBorder / 2;
-        adjuster.width = styles.width;
-        adjuster.height = styles.height;
-        adjuster.left = `-${parentBorder}px`;
-        adjuster.top = `-${parentBorder}px`;
-        setAdjusterStyles(adjuster);
+        setStyles(getElement(selectedId, elements).styles)
+    }, [elements])
+
+    useEffect(() => {
+        let adjuster = {}
+        let styles = getElement(selectedId, elements).styles
+        let parentBorder = styles.border ? parseInt(styles.border) : 0
+        let left = parseInt(styles.left) - parentBorder / 2
+        let top = parseInt(styles.top) - parentBorder / 2
+        adjuster.width = styles.width
+        adjuster.height = styles.height
+        adjuster.left = `-${parentBorder}px`
+        adjuster.top = `-${parentBorder}px`
+        setAdjusterStyles(adjuster)
     }, [elements])
 
     const changeElementPosition = (move) => {
         return function(e) {
-            let els = [...elements]
-            let styles = els[selectedId].styles
-            els[selectedId].styles = {
-                ...els[selectedId].styles,
-                top: (getNumericValue(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
-                left: (getNumericValue(styles.left) + (move.left ? move.left === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
-                height: (getNumericValue(styles.height) + (move.height ? move.height === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
-                width: (getNumericValue(styles.width) + (move.width ? move.width === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
+            let currentElements = [...elements]
+            let styles = getElement(selectedId, currentElements).styles
+            const currentElement = getElement(selectedId, currentElements)
+            currentElement.styles = {
+                ...styles,
+                top: (parseInt(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
+                left: (parseInt(styles.left) + (move.left ? move.left === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
+                height: (parseInt(styles.height) + (move.height ? move.height === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
+                width: (parseInt(styles.width) + (move.width ? move.width === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
             }
-            dispatch(updateElements(els));
+            dispatch(updateElements(currentElements));
         }
     }
 
     const getMouseMovement = (e) => {
-        const x = e.movementX;
-        const y = e.movementY;
+        const x = e.movementX
+        const y = e.movementY
         return [x, y]
     }
 
@@ -84,9 +90,9 @@ const Adjuster = () => {
             <div onMouseDown={() => commenceMovingElement({height: true, width: true})} className="adjuster square bottom right"></div>
             <div onMouseDown={() => commenceMovingElement({left: true, height: true, width: "opposite"})} className="adjuster square bottom left"></div>
 
-            <div className="dimensions">{elements[selectedId].styles.width.match(/\d+/)[0]} x {elements[selectedId].styles.height.match(/\d+/)[0]}</div>
+            <div className="dimensions">{parseInt(styles.width)} x {parseInt(styles.height)}</div>
         </div>
     );
 }
 
-export default Adjuster;
+export default Adjuster

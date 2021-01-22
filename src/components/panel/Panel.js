@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useState, useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-import './panel.css';
+import { getElement, getParent } from '../../helpers.js'
+import './panel.css'
 
-import ColorPanel from './ColorPanel.js';
-import { ReactComponent as Toggle } from './paneltoggle.svg';
-import { ReactComponent as Caret } from './caret.svg';
+import ColorPanel from './ColorPanel.js'
+import { ReactComponent as Toggle } from './paneltoggle.svg'
+import { ReactComponent as Caret } from './caret.svg'
 
 import {
     setCanvasSize,
@@ -13,23 +14,30 @@ import {
     setSelectedElementId,
     setHoveredElementId,
     toggleColorPanel
-} from '../../store/actions/actions.js';
+} from '../../store/actions/actions.js'
 
 const Panel = () => {
-    const [width, setWidth] = useState('');
-    const [height, setHeight] = useState('');
-    const [sidebarItem, setSidebarItem] = useState(1);
+    const [width, setWidth] = useState('')
+    const [height, setHeight] = useState('')
+    const [sidebarItem, setSidebarItem] = useState(1)
 
-    const canvasSize = useSelector(state => state.editor.canvasSize);
-    const selectedId = useSelector(state => state.editor.selectedElementId);
-    const elements = useSelector(state => state.editor.elements);
-    const colorPanel = useSelector(state => state.editor.colorPanel);
-    const dispatch = useDispatch();
+    const canvasSize = useSelector(state => state.editor.canvasSize)
+    const selectedId = useSelector(state => state.editor.selectedElementId)
+    const elements = useSelector(state => state.editor.elements)
+    const colorPanel = useSelector(state => state.editor.colorPanel)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         setWidth(canvasSize[0])
         setHeight(canvasSize[1])
     }, [canvasSize])
+
+    useEffect(() => {
+        console.log(selectedId);
+    }, [selectedId])
+    useEffect(() => {
+        console.log(elements);
+    }, [elements])
 
     const handelSideBarClick = (item) => {
         setSidebarItem(item)
@@ -38,11 +46,11 @@ const Panel = () => {
 
     const updateCanvasSize = () => {
         if (isNaN(width) || isNaN(height)) return;
-        dispatch(setCanvasSize([parseInt(width), parseInt(height)]));
+        dispatch(setCanvasSize([parseInt(width), parseInt(height)]))
     }
 
     const addElement = () => {
-        const id = elements.length
+        const id = elements.length.toString()
         const newElement = {
             id,
             type: 'div',
@@ -61,15 +69,45 @@ const Panel = () => {
         dispatch(setSelectedElementId(id))
     }
 
-    const deleteElement = () => {
-        const updatedElements = [...elements]
-        updatedElements.splice(selectedId, 1)
-        dispatch(setSelectedElementId(-1))
-        dispatch(updateElements(updatedElements));
+    const addChildElement = () => {
+        let id = selectedId
+        const currentElements = [...elements]
+        const currentElement = getElement(id, currentElements)
+        id += `-${currentElement.children.length}`
+        console.log("THE NEW ID: ", id);
+        const newElement = {
+            id,
+            type: 'div',
+            styles: {
+                'left': '0px',
+                'top': '0px',
+                'width': '200px',
+                'height': '100px',
+                'background': '#293039',
+                'position': 'absolute',
+                'boxSizing': 'borderBox',
+            },
+            children: []
+        }
+        currentElement.children.push(newElement)
+        console.log(currentElement);
+        dispatch(updateElements(currentElements))
+        dispatch(setSelectedElementId(id))
+        console.log(id);
+        // console.log(selectedId);
     }
 
-    const test = () => {
-        console.log("test");
+    const deleteElement = () => {
+        console.log("delete");
+        // const updatedElements = [...elements]
+        // updatedElements.splice(selectedId, 1)
+        // dispatch(setSelectedElementId(-1))
+        // dispatch(updateElements(updatedElements));
+    }
+
+    const restart = () => {
+        dispatch(setSelectedElementId(''))
+        dispatch(updateElements([]))
     }
 
     return (
@@ -98,6 +136,8 @@ const Panel = () => {
                     <button onClick={() => updateCanvasSize()}>Update</button>
                     <button onClick={() => addElement()}>Add Element</button>
                     <button onClick={() => deleteElement()}>Delete Element</button>
+                    {selectedId ? <button onClick={() => addChildElement()}>Add Child</button> : ''}
+                    <button onClick={() => restart()}>Restart Design</button>
                 </div>
                 : ''
             }
