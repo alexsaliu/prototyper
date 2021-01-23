@@ -1,17 +1,17 @@
-import React, {useState, useEffect} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useState, useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-import Color from './Color.js';
-import ColorPicker from '../misc/colorPicker/ColorPicker.js';
-import './colorPanel.css';
+import Color from './Color.js'
+import ColorPicker from '../misc/colorPicker/ColorPicker.js'
+import './colorPanel.css'
 
 import {
     updateElements,
-} from '../../store/actions/actions.js';
+} from '../../store/actions/actions.js'
 
 const ColorPanel = () => {
-    const [documentColors, setDocumentColors] = useState([]);
-    const [defaultColors, setDefaultColors] = useState(
+    const [documentColors, setDocumentColors] = useState([])
+    const [defaultColors] = useState(
         ['#000000', '#545454', '#737373', '#a6a6a6', '#d9d9d9', '#ffffff',
         '#ff1616', '#ff5757', '#ff66c4', '#cb6ce6', '#8c52ff', '#5e17eb',
         '#03989e', '#00c2cb', '#5ce1e6', '#38b6ff', '#5271ff', '#004aad',
@@ -19,20 +19,22 @@ const ColorPanel = () => {
     );
     const [showColorPicker, setShowColorPicker] = useState(false)
 
-    const colorPanel = useSelector(state => state.editor.colorPanel);
-    const elements = useSelector(state => state.editor.elements);
-    const recentColors = useSelector(state => state.editor.recentColors);
-    const dispatch = useDispatch();
+    const colorPanel = useSelector(state => state.editor.colorPanel)
+    const elements = useSelector(state => state.editor.elements)
+    const recentColors = useSelector(state => state.editor.recentColors)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        let colors = new Set();
-        for (const element of elements) {
-            if (element.styles.background) {
-                colors.add(element.styles.background)
-            }
-        }
-        setDocumentColors([...colors])
+        setDocumentColors([...getElementsColors(elements)])
     }, [elements])
+
+    const getElementsColors = (elements, setOfColors = new Set()) => {
+        for (const element of elements) {
+            setOfColors.add(element.styles.background)
+            getElementsColors(element.children, setOfColors)
+        }
+        return setOfColors
+    }
 
     const determineTooltipOffset = (i, text) => {
         let multiple = text.length > 7 ? text.length - 7 : 0
@@ -86,4 +88,4 @@ const ColorPanel = () => {
     );
 }
 
-export default ColorPanel;
+export default ColorPanel

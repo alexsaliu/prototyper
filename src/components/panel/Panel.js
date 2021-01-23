@@ -5,6 +5,8 @@ import { getElement, getParent } from '../../helpers.js'
 import './panel.css'
 
 import ColorPanel from './ColorPanel.js'
+import PanelElement from './PanelElement.js'
+
 import { ReactComponent as Toggle } from './paneltoggle.svg'
 import { ReactComponent as Caret } from './caret.svg'
 
@@ -20,6 +22,8 @@ const Panel = () => {
     const [width, setWidth] = useState('')
     const [height, setHeight] = useState('')
     const [sidebarItem, setSidebarItem] = useState(1)
+    const [sidebarTitles] = useState(['Settings', 'Elements', 'Nothing'])
+    const [panelElements, setPanelElements] = useState([])
 
     const canvasSize = useSelector(state => state.editor.canvasSize)
     const selectedId = useSelector(state => state.editor.selectedElementId)
@@ -33,11 +37,16 @@ const Panel = () => {
     }, [canvasSize])
 
     useEffect(() => {
-        console.log(selectedId);
-    }, [selectedId])
-    useEffect(() => {
-        console.log(elements);
+        setPanelElements(flattenElements(elements))
     }, [elements])
+
+    const flattenElements = (elements, flatArray=[]) => {
+        for (const element of elements) {
+            flatArray.push(element)
+            flatArray.concat(flattenElements(element.children, flatArray))
+        }
+        return flatArray
+    }
 
     const handelSideBarClick = (item) => {
         setSidebarItem(item)
@@ -110,6 +119,11 @@ const Panel = () => {
         dispatch(updateElements([]))
     }
 
+    const renderPanelElements = () => {
+
+        return [<div>OK</div>, <div>yes</div>]
+    }
+
     return (
         <div className="side-panel">
             <div className="sidebar">
@@ -118,15 +132,9 @@ const Panel = () => {
                     <div style={{top: `${sidebarItem * 72 - 72}px`}} className="sidebar-item-cover"></div>
                     : ''
                 }
-                <div onClick={() => handelSideBarClick(1)} className="sidebar-item">
-                    Item 1
-                </div>
-                <div onClick={() => handelSideBarClick(2)} className="sidebar-item">
-                    Item 2
-                </div>
-                <div onClick={() => handelSideBarClick(3)} className="sidebar-item">
-                    Item 3
-                </div>
+                {
+                    sidebarTitles.map((item, i) => <div onClick={() => handelSideBarClick(i+1)} className="sidebar-item" key={i}>{item}</div>)
+                }
             </div>
             {
                 sidebarItem === 1 ?
@@ -144,21 +152,9 @@ const Panel = () => {
             {
                 sidebarItem === 2 ?
                 <div className="panel">
-                    {elements.map((element, i) =>
-                        <div
-                        key={i}
-                        className="panel-element"
-                        style={{background: selectedId === i ? '#0e1318': ''}}
-                        onClick={() => dispatch(setSelectedElementId(i))}
-                        onMouseEnter={() => dispatch(setHoveredElementId(i))}
-                        onMouseLeave={() => dispatch(setHoveredElementId(-1))}
-                        >
-                            <div style={{background: selectedId === i ? 'var(--highlight-color)': ''}} className="panel-element-icon">
-                            </div>
-                            <div onChange={() => test()} className="panel-element-name">
-                                element {i}
-                            </div>
-                        </div>)}
+                    {
+                        panelElements.map((el, i) => <PanelElement id={el.id} />)
+                    }
                 </div>
                 : ''
             }

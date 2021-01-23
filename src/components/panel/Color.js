@@ -1,23 +1,25 @@
-import React, { useState, useRef } from 'react';
-import { useSelector, useDispatch} from 'react-redux';
+import React, { useState, useRef } from 'react'
+import { useSelector, useDispatch} from 'react-redux'
 
-import Tooltip from '../misc/tooltip/Tooltip.js';
+import Tooltip from '../misc/tooltip/Tooltip.js'
+
+import { getElement } from '../../helpers.js'
 
 import './colorPanel.css';
 
 import {
     updateElements,
     updateRecentColors,
-} from '../../store/actions/actions.js';
+} from '../../store/actions/actions.js'
 
 const Color = ({color, offsetTooltip}) => {
-    const [showTooltip, setShowTooltip] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false)
 
-    const selectedId = useSelector(state => state.editor.selectedElementId);
-    const elements = useSelector(state => state.editor.elements);
-    const recentColors = useSelector(state => state.editor.recentColors);
+    const selectedId = useSelector(state => state.editor.selectedElementId)
+    const elements = useSelector(state => state.editor.elements)
+    const recentColors = useSelector(state => state.editor.recentColors)
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
     const timeout = useRef(null)
 
@@ -26,20 +28,19 @@ const Color = ({color, offsetTooltip}) => {
             timeout.current = setTimeout(() => {setShowTooltip(true)}, 500)
         }
         else {
-            clearTimeout(timeout.current);
-            setShowTooltip(false);
+            clearTimeout(timeout.current)
+            setShowTooltip(false)
         }
     }
 
     const setElementColor = () => {
-        const elementsCopy = [...elements];
-        const styles = {...elementsCopy[selectedId].styles};
-        styles.background = color;
-        elementsCopy[selectedId].styles = styles;
-        dispatch(updateElements(elementsCopy))
-        let ok = [...recentColors]
-        ok.push(color)
-        dispatch(updateRecentColors(ok))
+        const currentElements = [...elements]
+        const currentElement = getElement(selectedId, currentElements)
+        currentElement.styles = {
+            ...currentElement.styles,
+            background: color
+        }
+        dispatch(updateElements(currentElements))
         handelRecentColors(color)
     }
 

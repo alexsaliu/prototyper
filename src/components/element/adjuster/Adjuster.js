@@ -1,20 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { getElement } from '../../../helpers.js'
-import { calcElementAdjustment } from './movement.js'
 
 import './adjuster.css'
 
 import {
-    updateElements,
-    setSelectedElementId
+    updateElements
 } from '../../../store/actions/actions.js'
 
 const Adjuster = () => {
     const [adjusterStyles, setAdjusterStyles] = useState({})
-    const [top, setTop] = useState(false)
-    const [left, setLeft] = useState(false)
     const [styles, setStyles] = useState({})
 
     const selectedId = useSelector(state => state.editor.selectedElementId)
@@ -29,8 +25,6 @@ const Adjuster = () => {
         let adjuster = {}
         let styles = getElement(selectedId, elements).styles
         let parentBorder = styles.border ? parseInt(styles.border) : 0
-        let left = parseInt(styles.left) - parentBorder / 2
-        let top = parseInt(styles.top) - parentBorder / 2
         adjuster.width = styles.width
         adjuster.height = styles.height
         adjuster.left = `-${parentBorder}px`
@@ -41,8 +35,8 @@ const Adjuster = () => {
     const changeElementPosition = (move) => {
         return function(e) {
             let currentElements = [...elements]
-            let styles = getElement(selectedId, currentElements).styles
             const currentElement = getElement(selectedId, currentElements)
+            const styles = currentElement.styles
             currentElement.styles = {
                 ...styles,
                 top: (parseInt(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
