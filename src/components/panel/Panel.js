@@ -83,7 +83,6 @@ const Panel = () => {
         const currentElements = [...elements]
         const currentElement = getElement(id, currentElements)
         id += `-${currentElement.children.length}`
-        console.log("THE NEW ID: ", id);
         const newElement = {
             id,
             type: 'div',
@@ -99,11 +98,8 @@ const Panel = () => {
             children: []
         }
         currentElement.children.push(newElement)
-        console.log(currentElement);
         dispatch(updateElements(currentElements))
         dispatch(setSelectedElementId(id))
-        console.log(id);
-        // console.log(selectedId);
     }
 
     const deleteElement = () => {
@@ -153,7 +149,7 @@ const Panel = () => {
                 sidebarItem === 2 ?
                 <div className="panel">
                     {
-                        panelElements.map((el, i) => <PanelElement id={el.id} />)
+                        panelElements.map((el, i) => <PanelElement id={el.id} key={i} />)
                     }
                 </div>
                 : ''

@@ -5,6 +5,7 @@
     position: absolute;
     left: 70px;
     border-right: 1px solid rgba(57,76,96,.15);
+    z-index: 1;
 }
 
 .color-section {

@@ -68,14 +68,18 @@ const ColorPanel = () => {
                     )}
                 </div>
             </div>
-            <div className="color-section">
-                <div className="color-title">Recent colors</div>
-                <div className="color-container">
-                    {recentColors.map((color, i) =>
-                        <Color color={color} key={i} offsetTooltip={determineTooltipOffset(i + 1, color)} />
-                    )}
+            {
+                recentColors.length ?
+                <div className="color-section">
+                    <div className="color-title">Recent colors</div>
+                    <div className="color-container">
+                        {recentColors.map((color, i) =>
+                            <Color color={color} key={i} offsetTooltip={determineTooltipOffset(i + 1, color)} />
+                        )}
+                    </div>
                 </div>
-            </div>
+                : ''
+            }
             <div className="color-section">
                 <div className="color-title">Default colors</div>
                 <div className="color-container">

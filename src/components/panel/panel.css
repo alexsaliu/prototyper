@@ -2,6 +2,7 @@
     height: 100%;
     width: 350px;
     background: #293039;
+    z-index: 1;
 }
 
 .side-panel {

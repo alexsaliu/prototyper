@@ -5,7 +5,6 @@ export const getElement = (id, elements) => {
     for (let i = 1; i < id.length; i++) {
         element = element.children[parseInt(id[i])]
     }
-    console.log(element);
     return element
 }
 
