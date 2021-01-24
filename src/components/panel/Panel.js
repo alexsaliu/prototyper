@@ -103,11 +103,18 @@ const Panel = () => {
     }
 
     const deleteElement = () => {
-        console.log("delete");
-        // const updatedElements = [...elements]
-        // updatedElements.splice(selectedId, 1)
-        // dispatch(setSelectedElementId(-1))
-        // dispatch(updateElements(updatedElements));
+        let currentElements = [...elements]
+        let array = currentElements
+        if (selectedId.length > 1) array = getParent(selectedId, currentElements).children
+        const id = selectedId.split('-')
+        array.splice(parseInt(id[id.length - 1]), 1)
+        for (let i = 0; i < array.length; i++) {
+            let oldId = array[i].id.split('-')
+            oldId[oldId.length - 1] = i
+            array[i].id = oldId.join('-')
+        }
+        dispatch(setSelectedElementId(''))
+        dispatch(updateElements(currentElements));
     }
 
     const restart = () => {
