@@ -8,6 +8,7 @@ import './element.css'
 
 import {
     setSelectedElementId,
+    setHoveredElementId
 } from '../../store/actions/actions.js'
 
 const Element = ({id, children}) => {
@@ -24,6 +25,11 @@ const Element = ({id, children}) => {
         dispatch(setSelectedElementId(id))
     }
 
+    const handelHover = (e, hover) => {
+        setHovered(hover)
+        dispatch(setHoveredElementId(hover ? id : ''))
+    }
+
     useEffect(() => {
         setStyles(getElement(id, elements).styles)
     }, [elements])
@@ -33,8 +39,8 @@ const Element = ({id, children}) => {
             className="element"
             style={styles}
             onClick={(e) => handleClick(e)}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            onMouseEnter={(e) => handelHover(e, true)}
+            onMouseLeave={(e) => handelHover(e, false)}
         >
             {hoveredId === id || hovered ? <div className="hover-border"></div> : ''}
             {selectedId === id ? <Adjuster /> : ''}

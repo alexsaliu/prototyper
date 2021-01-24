@@ -8,11 +8,13 @@ import {
     setHoveredElementId
 } from '../../store/actions/actions.js'
 
-const PanelElement = ({id}) => {
-    const [padding, setPadding] = useState(0)
+const PanelElement = ({id, level}) => {
+    const [margin, setMargin] = useState(0)
     const [lineHeight, setLineHeight] = useState(1)
+    const [highlight, setHighlight] = useState(false)
 
     const selectedId = useSelector(state => state.editor.selectedElementId)
+    const hoveredId = useSelector(state => state.editor.hoveredElementId)
     const elements = useSelector(state => state.editor.elements)
     const dispatch = useDispatch()
 
@@ -21,8 +23,25 @@ const PanelElement = ({id}) => {
     }, [elements])
 
     useEffect(() => {
-        setPadding(id.split('-').length - 1)
+        const thisElementId = id.split('-')
+        const level = thisElementId.length - 1
+        setMargin(level)
     }, [id])
+
+    useEffect(() => {
+        const thisElementId = id.split('-')
+        const selectedElementId = selectedId.split('-')
+        const level = thisElementId.length - 1
+        setHighlight(compareIdsToLevel(thisElementId, selectedElementId, level))
+    }, [selectedId])
+
+    const compareIdsToLevel = (id1, id2, level) => {
+        let same = true
+        for (let i = 0; i <= level; i++) {
+            if (id1[i] !== id2[i]) same = false
+        }
+        return same
+    }
 
     const calculateLineHeight = (id, elements) => {
         let siblingId = id.split('-').map(id => parseInt(id))
@@ -48,26 +67,44 @@ const PanelElement = ({id}) => {
 
     return (
         <div
-        key={id}
-        className="panel-element"
-        style={{
-            background: selectedId === id ? '#0e1318': '',
-            paddingLeft: `${padding}rem`
-        }}
-        onClick={() => dispatch(setSelectedElementId(id))}
-        onMouseEnter={() => dispatch(setHoveredElementId(id))}
-        onMouseLeave={() => dispatch(setHoveredElementId(''))}
+            className="panel-element-container"
+            style={{
+                background: selectedId === id ? '#0e1318': ''
+            }}
         >
-            {padding ? <div style={{height: `calc(100% * ${lineHeight}`}} className="hierarchy-line"></div> : ''}
             <div
+                key={id}
+                className="panel-element"
                 style={{
-                    background: selectedId === id ? 'var(--highlight-color)': '',
-                    marginLeft: id.split('-').length === 1 ? '13px' : ''
+                    marginLeft: `${margin}rem`,
+                    boxShadow: hoveredId === id ? 'inset 0 0 0 1px lightblue' : ''
                 }}
-                className="panel-element-icon">
-            </div>
-            <div onChange={() => test()} className="panel-element-name">
-                element {id}
+                onClick={() => dispatch(setSelectedElementId(id))}
+                onMouseEnter={() => dispatch(setHoveredElementId(id))}
+                onMouseLeave={() => dispatch(setHoveredElementId(''))}
+            >
+                {
+                    margin ?
+                    <div
+                        style={{
+                            height: `calc(100% * ${lineHeight}`,
+                            borderColor: highlight ? 'var(--highlight-color)' : '',
+                            zIndex: highlight ? '1' : 0
+                        }}
+                        className="hierarchy-line">
+                    </div> : ''
+                }
+                <div
+                    style={{
+                        background: highlight ? 'var(--highlight-color)': '',
+                        marginLeft: id.split('-').length === 1 ? '13px' : '',
+                        zIndex: highlight ? 1 : 0
+                    }}
+                    className="panel-element-icon">
+                </div>
+                <div onChange={() => test()} className="panel-element-name">
+                    element{id}
+                </div>
             </div>
         </div>
     )

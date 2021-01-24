@@ -22,7 +22,7 @@ const Panel = () => {
     const [width, setWidth] = useState('')
     const [height, setHeight] = useState('')
     const [sidebarItem, setSidebarItem] = useState(1)
-    const [sidebarTitles] = useState(['Settings', 'Elements', 'Nothing'])
+    const [sidebarTitles] = useState(['Settings', 'Elements'])
     const [panelElements, setPanelElements] = useState([])
 
     const canvasSize = useSelector(state => state.editor.canvasSize)
@@ -156,7 +156,7 @@ const Panel = () => {
                 sidebarItem === 2 ?
                 <div className="panel">
                     {
-                        panelElements.map((el, i) => <PanelElement id={el.id} key={i} />)
+                        panelElements.map((el, i) => <PanelElement key={i} id={el.id} />)
                     }
                 </div>
                 : ''
