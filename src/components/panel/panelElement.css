@@ -1,7 +1,7 @@
 .panel-element {
     display: flex;
     align-items: center;
-    height: 32px;
+    height: 24px;
 }
 
 .panel-element-icon {
@@ -13,7 +13,7 @@
 
 .panel-element-name {
     color: #e1e1e1;
-    font-size: 12px;
+    font-size: 10px;
     transform: translateY(-1px);
 }
 

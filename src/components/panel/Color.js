@@ -3,6 +3,7 @@ import { useSelector, useDispatch} from 'react-redux'
 
 import Tooltip from '../misc/tooltip/Tooltip.js'
 
+import { setElementColor, setRecentColors } from './colorHelpers.js'
 import { getElement } from '../../helpers.js'
 
 import './colorPanel.css';
@@ -33,32 +34,16 @@ const Color = ({color, offsetTooltip}) => {
         }
     }
 
-    const setElementColor = () => {
-        const currentElements = [...elements]
-        const currentElement = getElement(selectedId, currentElements)
-        currentElement.styles = {
-            ...currentElement.styles,
-            background: color
-        }
-        dispatch(updateElements(currentElements))
-        handelRecentColors(color)
-    }
-
-    const handelRecentColors = (color) => {
-        let colors = [...recentColors]
-        if (colors.includes(color)) {
-            colors.splice(colors.indexOf(color), 1)
-        }
-        else if (colors.length === 6) {
-            colors.pop()
-        }
-        colors.unshift(color)
-        dispatch(updateRecentColors(colors))
+    const handelElementColorUpdate = () => {
+        const updatedElements = setElementColor(color, elements, selectedId)
+        const updatedRecentColors = setRecentColors(color, recentColors)
+        dispatch(updateElements(updatedElements))
+        dispatch(updateRecentColors(updatedRecentColors))
     }
 
     return (
         <div
-            onClick={() => setElementColor()}
+            onClick={() => handelElementColorUpdate()}
             onMouseOver={() => tooltipTrigger(true)}
             onMouseLeave={() => tooltipTrigger(false)}
             className="color"

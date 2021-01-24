@@ -4,6 +4,7 @@ import './editor.css';
 
 import {
     setSelectedElementId,
+    toggleColorPanel
 } from '../store/actions/actions.js';
 
 import Header from '../components/header/Header.js';
@@ -17,6 +18,7 @@ const Editor = () => {
 
     const unSelectElements = () => {
         dispatch(setSelectedElementId(''))
+        dispatch(toggleColorPanel(false))
     }
 
     return (

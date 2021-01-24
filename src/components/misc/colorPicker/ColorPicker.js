@@ -6,7 +6,7 @@ import './colorPicker.css'
 const WIDTH = 260
 const HEIGHT = 104
 
-const ColorPicker = () => {
+const ColorPicker = ({startColor, changeColor}) => {
     const [color, setColor] = useState('#FF0000')
     const [baseRgb, setBaseRgb] = useState([255, 0, 0])
     const [selectorPosition, setSelectorPosition] = useState([WIDTH, 0])
@@ -20,21 +20,31 @@ const ColorPicker = () => {
         }
     }, [baseRgb, selectorPosition])
 
+    useEffect(() => {
+        if (startColor) {
+            changeHex(startColor)
+        }
+    }, [])
+
+    useEffect(() => {
+        changeColor(color)
+    }, [color])
+
     const calculateNewRgb = (baseRgb, xPosition, yPosition, width=WIDTH, height=HEIGHT) => {
         let newRgb = [0,0,0];
         for (let i = 0; i < 3; i++) {
-            const distanceFromRight = width - xPosition;
-            const percentageDecimalFromRight = distanceFromRight / width;
-            const rgbRange = 255 - baseRgb[i];
-            const rgb = percentageDecimalFromRight * rgbRange + baseRgb[i];
-            newRgb[i] = Math.round(rgb);
+            const distanceFromRight = width - xPosition
+            const percentageDecimalFromRight = distanceFromRight / width
+            const rgbRange = 255 - baseRgb[i]
+            const rgb = percentageDecimalFromRight * rgbRange + baseRgb[i]
+            newRgb[i] = Math.round(rgb)
         }
         for (let i = 0; i < 3; i++) {
-            const distanceFromTop = yPosition;
-            const percentageDecimalFromTop = distanceFromTop / height;
-            const rgbRange = newRgb[i];
-            const rgb = newRgb[i] - percentageDecimalFromTop * rgbRange;
-            newRgb[i] = Math.round(rgb);
+            const distanceFromTop = yPosition
+            const percentageDecimalFromTop = distanceFromTop / height
+            const rgbRange = newRgb[i]
+            const rgb = newRgb[i] - percentageDecimalFromTop * rgbRange
+            newRgb[i] = Math.round(rgb)
         }
         return newRgb
     }

@@ -1,12 +1,16 @@
 import React, {useState, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
+import { setElementColor, setRecentColors } from './colorHelpers.js'
+import { getElement } from '../../helpers.js'
+
 import Color from './Color.js'
 import ColorPicker from '../misc/colorPicker/ColorPicker.js'
 import './colorPanel.css'
 
 import {
     updateElements,
+    updateRecentColors
 } from '../../store/actions/actions.js'
 
 const ColorPanel = () => {
@@ -18,9 +22,11 @@ const ColorPanel = () => {
         '#008037', '#7ed957', '#c9e265', '#ffdf5a', '#ffbd59', '#ff914d']
     );
     const [showColorPicker, setShowColorPicker] = useState(false)
+    const [colorPickerColor, setColorPickerColor] = useState('')
 
     const colorPanel = useSelector(state => state.editor.colorPanel)
     const elements = useSelector(state => state.editor.elements)
+    const selectedId = useSelector(state => state.editor.selectedElementId)
     const recentColors = useSelector(state => state.editor.recentColors)
     const dispatch = useDispatch()
 
@@ -47,16 +53,28 @@ const ColorPanel = () => {
         return 0
     }
 
+    const handelElementColorUpdate = (color) => {
+        setColorPickerColor(color)
+        const updatedElements = setElementColor(color, elements, selectedId)
+        dispatch(updateElements(updatedElements))
+    }
+
+    const handelRecentColors = () => {
+        if (!showColorPicker) return
+        const updatedRecentColors = setRecentColors(colorPickerColor, recentColors)
+        dispatch(updateRecentColors(updatedRecentColors))
+    }
+
     return (
         <div className="color-panel">
             <div className="color-section">
                 <div className="color-title">New color</div>
                 <div className="color-container">
-                    <div onClick={() => setShowColorPicker(!showColorPicker)} className="color color-rainbow">
+                    <div onClick={() => {setShowColorPicker(!showColorPicker); handelRecentColors()}} className="color color-rainbow">
                         <div className="rainbow"></div>
                     </div>
                     {showColorPicker ? <div className="colorpicker-container">
-                        <ColorPicker />
+                        <ColorPicker startColor={getElement(selectedId, elements).styles.background} changeColor={handelElementColorUpdate} />
                     </div>: ''}
                 </div>
             </div>
