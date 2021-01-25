@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { getElement, getParent } from '../../helpers.js'
+import { getElement, getParent, logHtml } from '../../helpers.js'
 import './panel.css'
 
 import ColorPanel from './ColorPanel.js'
@@ -123,11 +123,6 @@ const Panel = () => {
         dispatch(updateElements([]))
     }
 
-    const renderPanelElements = () => {
-
-        return [<div>OK</div>, <div>yes</div>]
-    }
-
     return (
         <div className="side-panel">
             <div className="sidebar">
@@ -162,6 +157,7 @@ const Panel = () => {
                     <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
                     <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
                     <button onClick={() => updateCanvasSize()}>Update</button>
+                    <button onClick={() => logHtml(elements)}>console.log html</button>
                     <button onClick={() => restart()}>Restart Design</button>
                 </div>
                 : ''
