@@ -34,6 +34,10 @@ const ColorPanel = () => {
         setDocumentColors([...getElementsColors(elements)])
     }, [elements])
 
+    useEffect(() => {
+        setShowColorPicker(false)
+    }, [selectedId])
+
     const getElementsColors = (elements, setOfColors = new Set()) => {
         for (const element of elements) {
             setOfColors.add(element.styles.background)

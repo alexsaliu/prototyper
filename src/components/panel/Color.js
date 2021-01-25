@@ -26,7 +26,7 @@ const Color = ({color, offsetTooltip}) => {
 
     const tooltipTrigger = (show) => {
         if (show) {
-            timeout.current = setTimeout(() => {setShowTooltip(true)}, 500)
+            timeout.current = setTimeout(() => {setShowTooltip(true)}, 400)
         }
         else {
             clearTimeout(timeout.current)

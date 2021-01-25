@@ -3,8 +3,8 @@ import convert from 'color-convert'
 
 import './colorPicker.css'
 
-const WIDTH = 260
-const HEIGHT = 104
+const WIDTH = 258
+const HEIGHT = 100
 
 const ColorPicker = ({startColor, changeColor}) => {
     const [color, setColor] = useState('#FF0000')
@@ -58,14 +58,14 @@ const ColorPicker = ({startColor, changeColor}) => {
         setColor(val)
         const hsl = convert.hex.hsl(val)
         setColorSliderValue(hsl[0])
-        setBaseRgb(convert.hsl.rgb([hsl[0], 100, 50]))
         updateSelectorPosition(convert.hsl.hsv(hsl))
+        setBaseRgb(convert.hsl.rgb([hsl[0], 100, 50]))
     }
 
     const updateSelectorPosition = (hsv) => {
         const xPosition = hsv[1] * (WIDTH / 100)
         const yPosition = 100 - hsv[2] * (HEIGHT / 100)
-        setSelectorPosition([xPosition, yPosition])
+        setSelectorPosition([Math.round(xPosition), Math.round(yPosition)])
     }
 
     const moveColorSelector = (rect) => {

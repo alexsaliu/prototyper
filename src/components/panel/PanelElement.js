@@ -1,6 +1,7 @@
 import React, { useState,  useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
+import { getParent } from '../../helpers.js'
 import './panelElement.css'
 
 import {
@@ -8,7 +9,7 @@ import {
     setHoveredElementId
 } from '../../store/actions/actions.js'
 
-const PanelElement = ({id, level}) => {
+const PanelElement = ({id}) => {
     const [margin, setMargin] = useState(0)
     const [lineHeight, setLineHeight] = useState(1)
     const [highlight, setHighlight] = useState(false)
@@ -19,13 +20,10 @@ const PanelElement = ({id, level}) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        setLineHeight(calculateLineHeight(id, elements))
-    }, [elements])
-
-    useEffect(() => {
         const thisElementId = id.split('-')
         const level = thisElementId.length - 1
         setMargin(level)
+        setLineHeight(calculateLineHeight(id, elements))
     }, [id])
 
     useEffect(() => {
@@ -44,24 +42,19 @@ const PanelElement = ({id, level}) => {
     }
 
     const calculateLineHeight = (id, elements) => {
-        let siblingId = id.split('-').map(id => parseInt(id))
-        let len = siblingId.length
-        if (len === 1 || siblingId[len - 1] === 0) return 1
-        // Get previous sibling element
-        siblingId[len - 1] = siblingId[len - 1] - 1
-        let siblingElement = elements[siblingId[0]]
-        for (let i = 1; i < len; i++) {
-            siblingElement = siblingElement.children[siblingId[i]]
-        }
+        let idArray = id.split('-').map(id => parseInt(id))
+        let len = idArray.length
+        if (len === 1 || idArray[len - 1] === 0) return 1
+        // Get previous siblings
+        let siblings = getParent(id, elements).children.slice(0, idArray[len - 1])
         // Count all children in sibling element tree
-        const traverse = (children, count=0) => {
-            for (const child of children) {
-                count += traverse(child.children)
+        const traverse = (array, count=0) => {
+            for (const item of array) {
+                count += traverse(item.children)
             }
             return count + 1
         }
-        const height = traverse(siblingElement.children) + 1
-        return height > 0 ? height : 1
+        return traverse(siblings)
     }
 
 

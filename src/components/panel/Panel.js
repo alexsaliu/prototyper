@@ -22,7 +22,7 @@ const Panel = () => {
     const [width, setWidth] = useState('')
     const [height, setHeight] = useState('')
     const [sidebarItem, setSidebarItem] = useState(1)
-    const [sidebarTitles] = useState(['Settings', 'Elements'])
+    const [sidebarTitles] = useState(['Elements', 'Settings'])
     const [panelElements, setPanelElements] = useState([])
 
     const canvasSize = useSelector(state => state.editor.canvasSize)
@@ -59,32 +59,9 @@ const Panel = () => {
     }
 
     const addElement = () => {
-        const id = elements.length.toString()
-        const newElement = {
-            id,
-            type: 'div',
-            styles: {
-                'left': '0px',
-                'top': '0px',
-                'width': '200px',
-                'height': '100px',
-                'background': '#293039',
-                'position': 'absolute',
-                'boxSizing': 'borderBox',
-            },
-            children: []
-        }
-        dispatch(updateElements(elements.concat(newElement)))
-        dispatch(setSelectedElementId(id))
-    }
-
-    const addChildElement = () => {
-        let id = selectedId
         const currentElements = [...elements]
-        const currentElement = getElement(id, currentElements)
-        id += `-${currentElement.children.length}`
         const newElement = {
-            id,
+            id: '',
             type: 'div',
             styles: {
                 'left': '0px',
@@ -97,22 +74,46 @@ const Panel = () => {
             },
             children: []
         }
-        currentElement.children.push(newElement)
-        dispatch(updateElements(currentElements))
-        dispatch(setSelectedElementId(id))
+        if (selectedId) {
+            const currentElement = getElement(selectedId, currentElements)
+            const id = selectedId + `-${currentElement.children.length}`
+            newElement.id = id
+            currentElement.children.push(newElement)
+            dispatch(updateElements(currentElements))
+            dispatch(setSelectedElementId(selectedId))
+        }
+        else {
+            const id = elements.length.toString()
+            newElement.id = id
+            dispatch(updateElements(elements.concat(newElement)))
+            dispatch(setSelectedElementId(id))
+        }
     }
 
     const deleteElement = () => {
         let currentElements = [...elements]
-        let array = currentElements
-        if (selectedId.length > 1) array = getParent(selectedId, currentElements).children
+        let siblings = currentElements
+        if (selectedId.length > 1) siblings = getParent(selectedId, currentElements).children
         const id = selectedId.split('-')
-        array.splice(parseInt(id[id.length - 1]), 1)
-        for (let i = 0; i < array.length; i++) {
-            let oldId = array[i].id.split('-')
-            oldId[oldId.length - 1] = i
-            array[i].id = oldId.join('-')
+        const level = id.length - 1
+        siblings.splice(parseInt(id[level]), 1)
+        // Update children Ids
+        const updateIds = (array, level, i) => {
+            for (const element of array) {
+                let oldId = element.id.split('-')
+                oldId[level] = i
+                element.id = oldId.join('-')
+                updateIds(element.children, level, i)
+            }
         }
+        // Re-index siblings
+        for (let i = 0; i < siblings.length; i++) {
+            const idArray = siblings[i].id.split('-')
+            idArray[level] = i
+            siblings[i].id = idArray.join('-')
+            updateIds(siblings[i].children, level, i)
+        }
+
         dispatch(setSelectedElementId(''))
         dispatch(updateElements(currentElements));
     }
@@ -142,22 +143,26 @@ const Panel = () => {
             {
                 sidebarItem === 1 ?
                 <div className="panel">
-                    <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
-                    <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
-                    <button onClick={() => updateCanvasSize()}>Update</button>
-                    <button onClick={() => addElement()}>Add Element</button>
-                    <button onClick={() => deleteElement()}>Delete Element</button>
-                    {selectedId ? <button onClick={() => addChildElement()}>Add Child</button> : ''}
-                    <button onClick={() => restart()}>Restart Design</button>
+                    <div className="panel-elements-top">
+                        <button onClick={() => addElement()}>Add Element</button>
+                        {selectedId ? <button onClick={() => deleteElement()}>Delete Element</button> : ''}
+                    </div>
+                    <div className="panel-elements-container">
+                        {
+                            panelElements.map((el, i) => <PanelElement key={i} id={el.id} />)
+                        }
+                    </div>
+
                 </div>
                 : ''
             }
             {
                 sidebarItem === 2 ?
                 <div className="panel">
-                    {
-                        panelElements.map((el, i) => <PanelElement key={i} id={el.id} />)
-                    }
+                    <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
+                    <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
+                    <button onClick={() => updateCanvasSize()}>Update</button>
+                    <button onClick={() => restart()}>Restart Design</button>
                 </div>
                 : ''
             }

@@ -4,6 +4,7 @@
     height: 100%;
     position: absolute;
     cursor: move;
+    z-index: 10000;
 }
 
 .adjuster-container * {
