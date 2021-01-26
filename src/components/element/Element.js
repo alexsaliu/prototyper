@@ -11,8 +11,9 @@ import {
     setHoveredElementId
 } from '../../store/actions/actions.js'
 
-const Element = ({id, children}) => {
+const Element = ({id, children, preventParentHovering}) => {
     const [hovered, setHovered] = useState(false)
+    const [childHovered, setChildHovered] = useState(false)
     const [styles, setStyles] = useState({})
 
     const elements = useSelector(state => state.editor.elements)
@@ -25,14 +26,21 @@ const Element = ({id, children}) => {
         dispatch(setSelectedElementId(id))
     }
 
-    const handelHover = (e, hover) => {
-        setHovered(hover)
-        dispatch(setHoveredElementId(hover ? id : ''))
+    const handelHover = (e, hovering) => {
+        setHovered(hovering)
+        if (typeof preventParentHovering !== "undefined") {
+            preventParentHovering(hovering)
+        }
+        dispatch(setHoveredElementId(hovering ? id : ''))
     }
 
     useEffect(() => {
         setStyles(getElement(id, elements).styles)
     }, [elements])
+
+    const childHovering = (hovering) => {
+        setChildHovered(hovering)
+    }
 
     return (
         <div
@@ -42,9 +50,9 @@ const Element = ({id, children}) => {
             onMouseEnter={(e) => handelHover(e, true)}
             onMouseLeave={(e) => handelHover(e, false)}
         >
-            {hoveredId === id || hovered ? <div className="hover-border"></div> : ''}
+            {hoveredId === id || (hovered && !childHovered) ? <div className="hover-border"></div> : ''}
             {selectedId === id ? <Adjuster /> : ''}
-            {children.map((element, i) => <Element key={i} id={id + '-' + i} children={element.children} />)}
+            {children.map((element, i) => <Element key={i} id={id + '-' + i} children={element.children} preventParentHovering={childHovering} />)}
         </div>
     );
 }

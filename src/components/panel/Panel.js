@@ -153,12 +153,16 @@ const Panel = () => {
             }
             {
                 sidebarItem === 2 ?
-                <div className="panel">
-                    <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
-                    <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
-                    <button onClick={() => updateCanvasSize()}>Update</button>
-                    <button onClick={() => logHtml(elements)}>console.log html</button>
-                    <button onClick={() => restart()}>Restart Design</button>
+                <div className="panel settings">
+                    <div className="canvas-update-container">
+                        <input onChange={(e) => setWidth(e.target.value)} type="text" value={width} />
+                        <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
+                        <button onClick={() => updateCanvasSize()}>Update</button>
+                    </div>
+                    <div className="button-container">                        
+                        <button onClick={() => logHtml(elements)}>console.log html</button>
+                        <button onClick={() => restart()}>Restart Design</button>
+                    </div>
                 </div>
                 : ''
             }

@@ -58,7 +58,7 @@ const ColorPanel = () => {
     }
 
     const handelElementColorUpdate = (color) => {
-        setColorPickerColor(color)
+        setColorPickerColor(color.toLowerCase())
         const updatedElements = setElementColor(color, elements, selectedId)
         dispatch(updateElements(updatedElements))
     }
