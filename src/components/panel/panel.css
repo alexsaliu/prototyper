@@ -94,7 +94,7 @@
 .panel-toggle {
     position: absolute;
     width: 32px;
-    right: -32px;
+    right: -35px;
     top: 50%;
     z-index: 1;
     transform: translate(-50%, -50%);
@@ -105,6 +105,6 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, calc(-50% - 2px));
     color: white;
 }
