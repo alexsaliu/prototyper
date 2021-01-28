@@ -86,7 +86,6 @@ const Panel = () => {
             const id = elements.length.toString()
             newElement.id = id
             dispatch(updateElements(elements.concat(newElement)))
-            dispatch(setSelectedElementId(id))
         }
     }
 
@@ -159,7 +158,7 @@ const Panel = () => {
                         <input onChange={(e) => setHeight(e.target.value)} type="text" value={height} />
                         <button onClick={() => updateCanvasSize()}>Update</button>
                     </div>
-                    <div className="button-container">                        
+                    <div className="button-container">
                         <button onClick={() => logHtml(elements)}>console.log html</button>
                         <button onClick={() => restart()}>Restart Design</button>
                     </div>
