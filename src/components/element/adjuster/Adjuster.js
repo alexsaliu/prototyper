@@ -25,8 +25,8 @@ const Adjuster = () => {
         let adjuster = {}
         let styles = getElement(selectedId, elements).styles
         let parentBorder = styles.border ? parseInt(styles.border) : 0
-        adjuster.width = styles.width
-        adjuster.height = styles.height
+        // adjuster.width = styles.width
+        // adjuster.height = styles.height
         adjuster.left = `-${parentBorder}px`
         adjuster.top = `-${parentBorder}px`
         setAdjusterStyles(adjuster)

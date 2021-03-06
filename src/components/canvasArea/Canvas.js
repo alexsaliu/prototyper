@@ -11,7 +11,14 @@ const Canvas = () => {
     return (
         <div
             className="canvas"
-            style={{minWidth: `${canvasSize[0]}px`, minHeight: `${canvasSize[1]}px`, position: 'relative', background: "#ffffff"}}
+            style={{
+                width: `${canvasSize[0]}px`,
+                height: `${canvasSize[1]}px`,
+                minWidth: `${canvasSize[0]}px`,
+                minHeight: `${canvasSize[1]}px`,
+                position: 'relative',
+                background: "#ffffff"
+            }}
         >
             {elements.map((element, i) => <Element key={i} id={i.toString()} children={element.children} />)}
         </div>

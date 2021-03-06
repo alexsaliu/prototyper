@@ -1,5 +1,4 @@
 import {
-    SET_MOUSE_POSITION,
     UPDATE_ELEMENTS,
     SET_SELECTED_ELEMENT_ID,
     SET_HOVERED_ELEMENT_ID,
@@ -8,23 +7,46 @@ import {
     UPDATE_RECENT_COLORS
 } from '../constants.js';
 
-const initialState = {
+const initialState = JSON.parse(localStorage.getItem('state')) || {
     canvasSize: [960, 540],
-    mousePosition: [0,0],
-    elements: JSON.parse(localStorage.getItem('elements')) || [],
+    elements: [],
     selectedElementId: '',
     hoveredElementId: '',
     colorPanel: false,
     recentColors: []
 }
 
+const tempHistory = []
+const history = []
+
+// const updateHistory = (state) => {
+    // go back
+        // pop off history and push to temp
+        // update state with end of history
+    // go forwards
+        // if temp.length
+        // pop off temp push to history
+        // update state with end of history
+    // if
+// }
+
+const storeStateInLocalStorage = (state) => {
+    localStorage.setItem('state', JSON.stringify(state))
+    return state
+}
+
+const updateHistory = (state) => {
+    history.push(state)
+    console.log("History: ", history)
+    return state
+}
+
+const pipe = (...functions) => args => functions.reduce((arg, fn) => fn(arg), args)
+
 export const editorReducer = (state = initialState, action = {}) => {
     switch (action.type) {
-        case SET_MOUSE_POSITION:
-            return {...state, mousePosition: action.payload}
         case UPDATE_ELEMENTS:
-            localStorage.setItem('elements', JSON.stringify(action.payload))
-            return {...state, elements: action.payload}
+            return pipe(storeStateInLocalStorage, updateHistory)({...state, elements: action.payload})
         case SET_SELECTED_ELEMENT_ID:
             return {...state, selectedElementId: action.payload}
         case SET_HOVERED_ELEMENT_ID:

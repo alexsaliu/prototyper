@@ -1,5 +1,4 @@
 import {
-    SET_MOUSE_POSITION,
     UPDATE_ELEMENTS,
     SET_SELECTED_ELEMENT_ID,
     SET_HOVERED_ELEMENT_ID,
@@ -8,12 +7,6 @@ import {
     UPDATE_RECENT_COLORS
 } from '../constants.js';
 
-export const setMousePosition = (coords) => {
-    return {
-        type: SET_MOUSE_POSITION,
-        payload: coords,
-    }
-}
 export const updateElements = (elements) => {
     return {
         type: UPDATE_ELEMENTS,
