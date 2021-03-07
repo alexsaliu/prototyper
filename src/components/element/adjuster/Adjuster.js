@@ -6,7 +6,8 @@ import { getElement } from '../../../helpers.js'
 import './adjuster.css'
 
 import {
-    updateElements
+    updateElements,
+    updateHistory
 } from '../../../store/actions/actions.js'
 
 const Adjuster = () => {
@@ -60,6 +61,7 @@ const Adjuster = () => {
         window.addEventListener('mouseup', function mouseUp() {
             window.removeEventListener('mousemove', mouseMove)
             window.removeEventListener('mouseup', mouseUp)
+            dispatch(updateHistory())
         })
     }
 

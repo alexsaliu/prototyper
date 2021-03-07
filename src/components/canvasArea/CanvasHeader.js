@@ -7,7 +7,8 @@ import { getElement } from '../../helpers.js'
 
 import {
     toggleColorPanel,
-    updateElements
+    updateElements,
+    stepHistory
 } from '../../store/actions/actions.js'
 
 const CanvasHeader = () => {
@@ -48,6 +49,10 @@ const CanvasHeader = () => {
                     </div>
                 </div> : ''
             }
+            <div>
+                <div onClick={() => dispatch(stepHistory(-1))}>back</div>
+                <div onClick={() => dispatch(stepHistory(1))}>forwards</div>
+            </div>
         </div>
     );
 }

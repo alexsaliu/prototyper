@@ -4,7 +4,9 @@ import {
     SET_HOVERED_ELEMENT_ID,
     SET_CANVAS_SIZE,
     TOGGLE_COLOR_PANEL,
-    UPDATE_RECENT_COLORS
+    UPDATE_RECENT_COLORS,
+    UPDATE_HISTORY,
+    STEP_HISTORY
 } from '../constants.js';
 
 export const updateElements = (elements) => {
@@ -41,5 +43,16 @@ export const updateRecentColors = (color) => {
     return {
         type: UPDATE_RECENT_COLORS,
         payload: color,
+    }
+}
+export const updateHistory = () => {
+    return {
+        type: UPDATE_HISTORY
+    }
+}
+export const stepHistory = (step) => {
+    return {
+        type: STEP_HISTORY,
+        payload: step
     }
 }
