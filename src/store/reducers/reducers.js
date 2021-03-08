@@ -9,6 +9,8 @@ import {
     STEP_HISTORY
 } from '../constants.js';
 
+import History from '../history.js'
+
 const initialState = JSON.parse(localStorage.getItem('state')) || {
     canvasSize: [960, 540],
     elements: [],
@@ -18,8 +20,8 @@ const initialState = JSON.parse(localStorage.getItem('state')) || {
     recentColors: []
 }
 
-let tempHistory = []
-const history = []
+const history = new History()
+history.add(JSON.parse(JSON.stringify(initialState)))
 
 // const updateHistory = (state) => {
     // go back
@@ -37,11 +39,11 @@ const storeStateInLocalStorage = (state) => {
     return state
 }
 
-const updateHistory = (state) => {
-    history.push(state)
-    console.log("History: ", history)
-    return state
-}
+// const addToHistory = (state) => {
+//     history.push(state)
+//     console.log("History: ", history)
+//     return state
+// }
 
 const pipe = (...functions) => args => functions.reduce((arg, fn) => fn(arg), args)
 
@@ -54,26 +56,15 @@ export const editorReducer = (state = initialState, action = {}) => {
         case SET_HOVERED_ELEMENT_ID:
             return {...state, hoveredElementId: action.payload}
         case SET_CANVAS_SIZE:
-            return pipe(storeStateInLocalStorage, updateHistory)({...state, canvasSize: action.payload})
+            return pipe(storeStateInLocalStorage, history.add)({...state, canvasSize: action.payload})
         case TOGGLE_COLOR_PANEL:
             return {...state, colorPanel: action.payload}
         case UPDATE_RECENT_COLORS:
-            return pipe(storeStateInLocalStorage, updateHistory)({...state, recentColors: action.payload})
+            return pipe(storeStateInLocalStorage, history.add)({...state, recentColors: action.payload})
         case UPDATE_HISTORY:
-            updateHistory(JSON.parse(JSON.stringify(state)))
-            tempHistory = []
-            return state
+            return history.add(state)
         case STEP_HISTORY:
-            if (action.payload < 0 && history.length > 1) {
-                tempHistory.push(history.pop())
-                return history[history.length - 1]
-            }
-            else if (action.payload > 0 && tempHistory.length) {
-                const forwardStep = tempHistory.pop()
-                history.push(forwardStep)
-                return forwardStep
-            }
-            // return state
+            return action.payload > 0 ? history.stepForward() : history.stepBack()
         default:
             return state
     }
