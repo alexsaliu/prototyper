@@ -39,11 +39,9 @@ const storeStateInLocalStorage = (state) => {
     return state
 }
 
-// const addToHistory = (state) => {
-//     history.push(state)
-//     console.log("History: ", history)
-//     return state
-// }
+const addToHistory = (state) => {
+    return history.add(state)
+}
 
 const pipe = (...functions) => args => functions.reduce((arg, fn) => fn(arg), args)
 
@@ -56,13 +54,13 @@ export const editorReducer = (state = initialState, action = {}) => {
         case SET_HOVERED_ELEMENT_ID:
             return {...state, hoveredElementId: action.payload}
         case SET_CANVAS_SIZE:
-            return pipe(storeStateInLocalStorage, history.add)({...state, canvasSize: action.payload})
+            return pipe(storeStateInLocalStorage, addToHistory)({...state, canvasSize: action.payload})
         case TOGGLE_COLOR_PANEL:
             return {...state, colorPanel: action.payload}
         case UPDATE_RECENT_COLORS:
-            return pipe(storeStateInLocalStorage, history.add)({...state, recentColors: action.payload})
+            return pipe(storeStateInLocalStorage, addToHistory)({...state, recentColors: action.payload})
         case UPDATE_HISTORY:
-            return history.add(state)
+            return pipe(storeStateInLocalStorage, addToHistory)(state)
         case STEP_HISTORY:
             return action.payload > 0 ? history.stepForward() : history.stepBack()
         default:
