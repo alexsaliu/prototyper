@@ -49,9 +49,9 @@ const CanvasHeader = () => {
                     </div>
                 </div> : ''
             }
-            <div>
-                <div onClick={() => dispatch(stepHistory(-1))}>back</div>
-                <div onClick={() => dispatch(stepHistory(1))}>forwards</div>
+            <div className="history-buttons">
+                <button onClick={() => dispatch(stepHistory(-1))}>&lsaquo;</button>
+                <button onClick={() => dispatch(stepHistory(1))}>&rsaquo;</button>
             </div>
         </div>
     );

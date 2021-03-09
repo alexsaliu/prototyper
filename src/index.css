@@ -27,6 +27,10 @@ body {
     --adjuster-line-offset: calc(var(--adjuster-line-size) / -2);
 }
 
+button {
+    cursor: pointer;
+}
+
 /* Highlight */
 .highlight-box {
     border: 1px solid var(--highlight-color);
