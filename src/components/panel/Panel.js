@@ -66,10 +66,10 @@ const Panel = () => {
             styles: {
                 'left': '0px',
                 'top': '0px',
-                'width': '200px',
-                'height': '100px',
+                'width': '90%',
+                'height': '90%',
                 'background': '#293039',
-                'position': 'absolute',
+                'position': 'relative',
                 'boxSizing': 'borderBox',
             },
             children: []

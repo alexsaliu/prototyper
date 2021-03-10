@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { getElement } from '../../../helpers.js'
+import { getElement, getParent } from '../../../helpers.js'
 
 import './adjuster.css'
 
@@ -33,26 +33,29 @@ const Adjuster = () => {
         setAdjusterStyles(adjuster)
     }, [elements])
 
+    const getUnit = (value) => {
+        if (typeof value !== 'string') return ''
+        if (value.split('%').length > 1) return '%'
+        if (value.split('px').length > 1) return 'px'
+        return 'rem'
+    }
+
     const changeElementPosition = (move) => {
         return function(e) {
             let currentElements = [...elements]
             const currentElement = getElement(selectedId, currentElements)
             const styles = currentElement.styles
+            const unit = getUnit(styles.width)
+
             currentElement.styles = {
                 ...styles,
                 top: (parseInt(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
                 left: (parseInt(styles.left) + (move.left ? move.left === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
-                height: (parseInt(styles.height) + (move.height ? move.height === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
-                width: (parseInt(styles.width) + (move.width ? move.width === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
+                height: (parseInt(styles.height) + (move.height ? move.height === "opposite" ? -e.movementY : e.movementY : '')) + unit,
+                width: (parseInt(styles.width) + (move.width ? move.width === "opposite" ? -e.movementX : e.movementX : '')) + unit,
             }
             dispatch(updateElements(currentElements));
         }
-    }
-
-    const getMouseMovement = (e) => {
-        const x = e.movementX
-        const y = e.movementY
-        return [x, y]
     }
 
     const commenceMovingElement = (params) => {
@@ -86,7 +89,7 @@ const Adjuster = () => {
             <div onMouseDown={() => commenceMovingElement({height: true, width: true})} className="adjuster square bottom right"></div>
             <div onMouseDown={() => commenceMovingElement({left: true, height: true, width: "opposite"})} className="adjuster square bottom left"></div>
 
-            <div className="dimensions">{parseInt(styles.width)} x {parseInt(styles.height)}</div>
+            <div className="dimensions">{parseInt(styles.width)} x {parseInt(styles.height)} {getUnit(styles.width)}</div>
         </div>
     );
 }
