@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { getElement } from '../../helpers.js'
@@ -8,18 +8,30 @@ import './element.css'
 
 import {
     setSelectedElementId,
-    setHoveredElementId
+    setHoveredElementId,
+    updateElements
 } from '../../store/actions/actions.js'
 
 const Element = ({id, children, preventParentHovering}) => {
     const [hovered, setHovered] = useState(false)
     const [childHovered, setChildHovered] = useState(false)
-    const [styles, setStyles] = useState({})
 
     const elements = useSelector(state => state.editor.elements)
     const selectedId = useSelector(state => state.editor.selectedElementId)
     const hoveredId = useSelector(state => state.editor.hoveredElementId)
     const dispatch = useDispatch()
+
+    const elementRef = useRef(null)
+
+    useEffect(() => {
+        const element = getElement(id, elements)
+        const dimensions = elementRef.current.getBoundingClientRect()
+        element.data = {
+            width: dimensions.width,
+            height: dimensions.height
+        }
+        dispatch(updateElements(elements))
+    }, [elements])
 
     const handleClick = (e) => {
         e.stopPropagation()
@@ -34,18 +46,15 @@ const Element = ({id, children, preventParentHovering}) => {
         dispatch(setHoveredElementId(hovering ? id : ''))
     }
 
-    useEffect(() => {
-        setStyles(getElement(id, elements).styles)
-    }, [elements])
-
     const childHovering = (hovering) => {
         setChildHovered(hovering)
     }
 
     return (
         <div
+            ref={elementRef}
             className="element"
-            style={styles}
+            style={getElement(id, elements).styles}
             onClick={(e) => handleClick(e)}
             onMouseEnter={(e) => handelHover(e, true)}
             onMouseLeave={(e) => handelHover(e, false)}
