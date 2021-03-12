@@ -47,24 +47,18 @@ const Adjuster = () => {
             const styles = currentElement.styles
             const unit = getUnit(styles.width)
             const parent = getParent(selectedId, elements)
-            
-            const calc = (mouseMovement, parentSize) => {
-                console.log("Movement: ", mouseMovement);
-                console.log(parentSize);
-                
-                console.log("div: ", mouseMovement / parentSize);
-                
-                return mouseMovement / parentSize * 100
+
+            const calculate = (mouseMovement, parentSize) => {
+                let value = mouseMovement / parentSize * 100
+                return parseFloat(value.toFixed(2))
             }
-            if (parent) {
-                
-            }
+
             currentElement.styles = {
                 ...styles,
                 top: (parseInt(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
                 left: (parseInt(styles.left) + (move.left ? move.left === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
-                height: (parseInt(styles.height) + (move.height ? move.height === "opposite" ? -e.movementY : e.movementY : '')) + unit,
-                width: (parseInt(styles.width) + (move.width ? move.width === "opposite" ? calc(-e.movementX, parent.data.width) : calc(e.movementX, parent.data.width) : '')) + unit,
+                height: (parseFloat(styles.height) + (move.height ? move.height === "opposite" ? calculate(-e.movementY, parent.data.height) : calculate(e.movementY, parent.data.height) : '')) + unit,
+                width: (parseFloat(styles.width) + (move.width ? move.width === "opposite" ? calculate(-e.movementX, parent.data.width) : calculate(e.movementX, parent.data.width) : '')) + unit,
             }
             dispatch(updateElements(currentElements));
         }
