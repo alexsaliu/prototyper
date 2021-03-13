@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import './canvasHeader.css'
 
+import { styleButtons } from './styleButtons.js'
 import { getElement } from '../../helpers.js'
 
 import {
@@ -13,6 +14,7 @@ import {
 
 const CanvasHeader = () => {
     const [color, setColor] = useState('')
+    const [elementStyles, setElementStyles] = useState({})
 
     const selectedId = useSelector(state => state.editor.selectedElementId)
     const elements = useSelector(state => state.editor.elements)
@@ -23,16 +25,33 @@ const CanvasHeader = () => {
         if (selectedId) setColor(getElement(selectedId, elements).styles.background)
     }, [selectedId])
 
+    useEffect(() => {
+        if (!selectedId) return
+        const element = getElement(selectedId, elements)
+        setElementStyles(element.styles)
+    }, [selectedId, elements])
+
     const changePosition = (position) => {
         const currentElements = [...elements]
         const element = getElement(selectedId, currentElements)
         element.styles = {
             ...element.styles,
             position,
-            width: '100%',
-            height: '100%'
+            top: position === 'absolute' ? '0px' : 'unset',
+            left: position === 'absolute' ? '0px' : 'unset',
         }
-        console.log(currentElements);
+        dispatch(updateElements(currentElements))
+    }
+
+    const applyFlex = (style) => {
+        const obj = {}
+        obj[style.property] = style.value
+        const currentElements = [...elements]
+        const element = getElement(selectedId, currentElements)
+        element.styles = {
+            ...element.styles,
+            ...obj
+        }
         dispatch(updateElements(currentElements))
     }
 
@@ -44,8 +63,20 @@ const CanvasHeader = () => {
                         <div style={{background: color}} className="color-toggle"></div>
                     </div>
                     <div className="position-settings">
-                        <div onClick={() => changePosition('relative')} className="canvas-header-button">rel</div>
-                        <div onClick={() => changePosition('absolute')} className="canvas-header-button">abs</div>
+                        <div style={elementStyles.position === 'relative' ? {background: '#c5c5c5'} : {}} onClick={() => changePosition('relative')} className="canvas-header-button">rel</div>
+                        <div style={elementStyles.position === 'absolute' ? {background: '#c5c5c5'} : {}} onClick={() => changePosition('absolute')} className="canvas-header-button">abs</div>
+                    </div>
+                    <div className="flexbox-settings">
+                        {styleButtons.map((button, i) =>
+                            <div
+                                key={i}
+                                style={elementStyles[button.property] === button.value ? {background: '#c5c5c5'} : {}}
+                                onClick={() => applyFlex({...button})}
+                                className="canvas-header-button"
+                            >
+                                {button.label}
+                            </div>)
+                        }
                     </div>
                 </div> : ''
             }

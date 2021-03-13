@@ -23,17 +23,6 @@ const initialState = JSON.parse(localStorage.getItem('state')) || {
 const history = new History()
 history.add(JSON.parse(JSON.stringify(initialState)))
 
-// const updateHistory = (state) => {
-    // go back
-        // pop off history and push to temp
-        // update state with end of history
-    // go forwards
-        // if temp.length
-        // pop off temp push to history
-        // update state with end of history
-    // if
-// }
-
 const storeStateInLocalStorage = (state) => {
     localStorage.setItem('state', JSON.stringify(state))
     return state

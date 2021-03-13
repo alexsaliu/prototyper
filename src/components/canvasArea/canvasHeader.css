@@ -38,12 +38,19 @@
     align-items: center;
 }
 
+.flexbox-settings {
+    display: flex;
+    margin-left: 30px;
+    align-items: center;
+}
+
 .canvas-header-button {
     padding: 4px 8px;
     background: #ededed;
     border-radius: 4px;
     margin: 5px;
     cursor: pointer;
+    font-size: 12px;
 }
 
 .history-buttons {

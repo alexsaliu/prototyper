@@ -15,6 +15,7 @@ const Adjuster = () => {
     const [styles, setStyles] = useState({})
 
     const selectedId = useSelector(state => state.editor.selectedElementId)
+    const canvasSize = useSelector(state => state.editor.canvasSize)
     const elements = useSelector(state => state.editor.elements)
     const dispatch = useDispatch()
 
@@ -26,8 +27,6 @@ const Adjuster = () => {
         let adjuster = {}
         let styles = getElement(selectedId, elements).styles
         let parentBorder = styles.border ? parseInt(styles.border) : 0
-        // adjuster.width = styles.width
-        // adjuster.height = styles.height
         adjuster.left = `-${parentBorder}px`
         adjuster.top = `-${parentBorder}px`
         setAdjusterStyles(adjuster)
@@ -46,19 +45,29 @@ const Adjuster = () => {
             const currentElement = getElement(selectedId, currentElements)
             const styles = currentElement.styles
             const unit = getUnit(styles.width)
-            const parent = getParent(selectedId, elements)
+            let parent = getParent(selectedId, elements)
 
-            const calculate = (mouseMovement, parentSize) => {
+            const calculatePercentage = (mouseMovement, parentSize) => {
                 let value = mouseMovement / parentSize * 100
                 return parseFloat(value.toFixed(2))
+            }
+
+            if (styles.position === 'relative') {
+                move.top = false
+                move.left = false
+            }
+
+            if (!parent) {
+                parent = {}
+                parent.data = {width: canvasSize[0], height: canvasSize[1]}
             }
 
             currentElement.styles = {
                 ...styles,
                 top: (parseInt(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
                 left: (parseInt(styles.left) + (move.left ? move.left === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
-                height: (parseFloat(styles.height) + (move.height ? move.height === "opposite" ? calculate(-e.movementY, parent.data.height) : calculate(e.movementY, parent.data.height) : '')) + unit,
-                width: (parseFloat(styles.width) + (move.width ? move.width === "opposite" ? calculate(-e.movementX, parent.data.width) : calculate(e.movementX, parent.data.width) : '')) + unit,
+                height: (parseFloat(styles.height) + (move.height ? move.height === "opposite" ? calculatePercentage(-e.movementY, parent.data.height) : calculatePercentage(e.movementY, parent.data.height) : '')) + unit,
+                width: (parseFloat(styles.width) + (move.width ? move.width === "opposite" ? calculatePercentage(-e.movementX, parent.data.width) : calculatePercentage(e.movementX, parent.data.width) : '')) + unit,
             }
             dispatch(updateElements(currentElements));
         }
