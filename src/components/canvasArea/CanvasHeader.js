@@ -37,8 +37,8 @@ const CanvasHeader = () => {
         element.styles = {
             ...element.styles,
             position,
-            top: position === 'absolute' ? '0px' : 'unset',
-            left: position === 'absolute' ? '0px' : 'unset',
+            top: position === 'absolute' ? '0px' : '0px',
+            left: position === 'absolute' ? '0px' : '0px',
         }
         dispatch(updateElements(currentElements))
     }

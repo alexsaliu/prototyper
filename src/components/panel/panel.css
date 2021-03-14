@@ -108,3 +108,19 @@
     transform: translate(-50%, calc(-50% - 2px));
     color: white;
 }
+
+.panel-style, .panel-project {
+    color: #e1e1e1;
+    font-size: 12px;
+    padding: 1px;
+    padding-left: 10px;
+    text-align: left;
+}
+
+.panel-project {
+    cursor: pointer;
+}
+
+.panel-style span {
+    color: var(--highlight-color);
+}

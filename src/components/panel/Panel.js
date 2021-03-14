@@ -15,20 +15,30 @@ import {
     updateElements,
     setSelectedElementId,
     setHoveredElementId,
-    toggleColorPanel
+    toggleColorPanel,
+    selectProject
 } from '../../store/actions/actions.js'
+
+import {
+    saveProject
+} from '../../store/actions/actions2.js'
 
 const Panel = () => {
     const [width, setWidth] = useState('')
     const [height, setHeight] = useState('')
     const [sidebarItem, setSidebarItem] = useState(1)
-    const [sidebarTitles] = useState(['Elements', 'Settings'])
+    const [sidebarTitles] = useState(['Elements', 'Settings', 'Styles', 'Projects'])
     const [panelElements, setPanelElements] = useState([])
+    const [elementStyles, setElementStyles] = useState({})
 
+    const state = useSelector(state => state.editor)
     const canvasSize = useSelector(state => state.editor.canvasSize)
     const selectedId = useSelector(state => state.editor.selectedElementId)
     const elements = useSelector(state => state.editor.elements)
     const colorPanel = useSelector(state => state.editor.colorPanel)
+
+    const projects = useSelector(state => state.other.projects)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -39,6 +49,10 @@ const Panel = () => {
     useEffect(() => {
         setPanelElements(flattenElements(elements))
     }, [elements])
+
+    useEffect(() => {
+        if (selectedId) setElementStyles(getElement(selectedId, elements).styles)
+    }, [selectedId, elements])
 
     const flattenElements = (elements, flatArray=[]) => {
         for (const element of elements) {
@@ -122,6 +136,20 @@ const Panel = () => {
         dispatch(updateElements([]))
     }
 
+    const save = () => {
+        const projectsCopy = [...projects]
+        projectsCopy.push({...state})
+        dispatch(saveProject(JSON.parse(JSON.stringify(projectsCopy))))
+    }
+
+    const handelSelectProject = (index) => {
+        const project = projects[index]
+        if (!project) return
+        // console.log(project);
+        // console.log(selectProject(JSON.parse(JSON.stringify(project))))
+        dispatch(selectProject(JSON.parse(JSON.stringify(project))))
+    }
+
     return (
         <div className="side-panel">
             <div className="sidebar">
@@ -160,8 +188,23 @@ const Panel = () => {
                     </div>
                     <div className="button-container">
                         <button onClick={() => logHtml(elements)}>console.log html</button>
-                        <button onClick={() => restart()}>Restart Design</button>
+                        <button onClick={() => restart()}>Restart Project</button>
+                        <button onClick={() => save()}>Save Project</button>
                     </div>
+                </div>
+                : ''
+            }
+            {
+                sidebarItem === 3 ?
+                <div className="panel">
+                    {Object.keys(elementStyles).map((key, i) => <div className="panel-style" key={i}><span>{key}:</span> {elementStyles[key]};</div>)}
+                </div>
+                : ''
+            }
+            {
+                sidebarItem === 4 ?
+                <div className="panel">
+                    {projects.map((project, i) => <div onClick={() => handelSelectProject(i)} className="panel-project" key={i}>Project {i}</div>)}
                 </div>
                 : ''
             }

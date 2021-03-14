@@ -6,12 +6,14 @@ import {
     TOGGLE_COLOR_PANEL,
     UPDATE_RECENT_COLORS,
     UPDATE_HISTORY,
-    STEP_HISTORY
+    STEP_HISTORY,
+    SELECT_PROJECT
 } from '../constants.js';
 
 import History from '../history.js'
 
 const initialState = JSON.parse(localStorage.getItem('state')) || {
+    mode: 'edit',
     canvasSize: [960, 540],
     elements: [],
     selectedElementId: '',
@@ -23,7 +25,7 @@ const initialState = JSON.parse(localStorage.getItem('state')) || {
 const history = new History()
 history.add(JSON.parse(JSON.stringify(initialState)))
 
-const storeStateInLocalStorage = (state) => {
+const storeInLocalStorage = (state) => {
     localStorage.setItem('state', JSON.stringify(state))
     return state
 }
@@ -43,15 +45,17 @@ export const editorReducer = (state = initialState, action = {}) => {
         case SET_HOVERED_ELEMENT_ID:
             return {...state, hoveredElementId: action.payload}
         case SET_CANVAS_SIZE:
-            return pipe(storeStateInLocalStorage, addToHistory)({...state, canvasSize: action.payload})
+            return pipe(storeInLocalStorage, addToHistory)({...state, canvasSize: action.payload})
         case TOGGLE_COLOR_PANEL:
             return {...state, colorPanel: action.payload}
         case UPDATE_RECENT_COLORS:
-            return pipe(storeStateInLocalStorage, addToHistory)({...state, recentColors: action.payload})
+            return pipe(storeInLocalStorage, addToHistory)({...state, recentColors: action.payload})
         case UPDATE_HISTORY:
-            return pipe(storeStateInLocalStorage, addToHistory)(state)
+            return pipe(storeInLocalStorage, addToHistory)(state)
         case STEP_HISTORY:
             return action.payload > 0 ? history.stepForward() : history.stepBack()
+        case SELECT_PROJECT:
+            return pipe(storeInLocalStorage)(action.payload)
         default:
             return state
     }

@@ -6,7 +6,8 @@ import {
     TOGGLE_COLOR_PANEL,
     UPDATE_RECENT_COLORS,
     UPDATE_HISTORY,
-    STEP_HISTORY
+    STEP_HISTORY,
+    SELECT_PROJECT
 } from '../constants.js';
 
 export const updateElements = (elements) => {
@@ -54,5 +55,11 @@ export const stepHistory = (step) => {
     return {
         type: STEP_HISTORY,
         payload: step
+    }
+}
+export const selectProject = (project) => {
+    return {
+        type: SELECT_PROJECT,
+        payload: project
     }
 }
