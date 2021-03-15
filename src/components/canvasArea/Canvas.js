@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useSelector } from 'react-redux';
 
 import './canvas.css';
@@ -7,6 +7,10 @@ import Element from '../element/Element.js';
 const Canvas = () => {
     const canvasSize = useSelector(state => state.editor.canvasSize);
     const elements = useSelector(state => state.editor.elements);
+
+    useEffect(() => {
+        console.log("updated");
+    }, [elements])
 
     return (
         <div

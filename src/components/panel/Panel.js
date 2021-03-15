@@ -6,6 +6,7 @@ import './panel.css'
 
 import ColorPanel from './ColorPanel.js'
 import PanelElement from './PanelElement.js'
+import StylesInput from './StylesInput.js'
 
 import { ReactComponent as Toggle } from './paneltoggle.svg'
 import { ReactComponent as Caret } from './caret.svg'
@@ -198,6 +199,9 @@ const Panel = () => {
                 sidebarItem === 3 ?
                 <div className="panel">
                     {Object.keys(elementStyles).map((key, i) => <div className="panel-style" key={i}><span>{key}:</span> {elementStyles[key]};</div>)}
+                    <div>
+                        <StylesInput />
+                    </div>
                 </div>
                 : ''
             }
