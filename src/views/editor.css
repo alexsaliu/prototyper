@@ -11,6 +11,7 @@
     /* width: calc(100% - 350px); */
     overflow: auto;
     flex-grow: 1;
+    position: relative;
 }
 
 .canvas-container {
@@ -21,4 +22,21 @@
     overflow: auto;
     display: flex;
     align-items: center;
+}
+
+.styles-input {
+    width: 100%;
+    position: absolute;
+    bottom: 40px;
+}
+
+.styles-input input {
+    outline: none;
+    border: none;
+    background: none;
+    color: transparent;
+    font-size: 40px;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 0 #293039;
 }

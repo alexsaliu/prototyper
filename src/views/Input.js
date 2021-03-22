@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { getElement } from '../../helpers.js'
+import { getElement } from '../helpers.js'
 
 import {
     updateElements,
     updateHistory
-} from '../../store/actions/actions.js'
+} from '../store/actions/actions.js'
 
 const StylesInput = () => {
     const [input, _setInput] = useState('')
 
     const inputRef = useRef(input)
+    const inputElRef = useRef(null)
 
     const setInput = (value) => {
         inputRef.current = value
@@ -23,29 +24,26 @@ const StylesInput = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (true) {
-            addStyles(input)
-        }
-        console.log("INPUT: ", input);
-    }, [input])
-
-    useEffect(() => {
-        function keyPress(e) {
-            if (e.key === 'Enter') {
-                setInput('')
-                return
-            }
-          setInput(inputRef.current + e.key)
-          console.log(inputRef.current);
-        }
-        document.addEventListener("keypress", keyPress);
+        document.addEventListener("keydown", keyDown)
 
         return () => {
-            document.removeEventListener('keypress', keyPress)
+            document.removeEventListener('keydown', keyDown)
         }
     }, [])
 
+    const keyDown = (e) => {
+        if (e.keyCode > 64 && e.keyCode < 91 && !e.ctrlKey) {
+            inputElRef.current.focus()
+        }
+        if (e.key === 'Enter') {
+            addStyles(inputRef.current)
+            setInput('')
+        }
+        return true
+    }
+
     const addStyles = (input) => {
+        console.log(input);
         input = input.split('-')
         const styleMap = {
             'w': 'width',
@@ -57,8 +55,6 @@ const StylesInput = () => {
             'bg': 'background',
         }
 
-        console.log("input 1", input[0]);
-        console.log("input 2", input[1]);
         const currentElements = [...elements]
         const element = getElement(selectedId, elements)
         const elementStyles = {...element.styles}
@@ -68,9 +64,8 @@ const StylesInput = () => {
     }
 
     return (
-        <div>
-            {/* <input onChange={(e) => setInput(e.target.value)} type="text" /> */}
-            <div className="styles-input">{input}</div>
+        <div className="styles-input">
+            <input ref={inputElRef} onChange={(e) => setInput(e.target.value)} value={input} type="text" />
         </div>
     );
 }
