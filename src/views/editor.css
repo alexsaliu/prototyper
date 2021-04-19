@@ -1,5 +1,6 @@
 .editor {
     background: #fbfbfb;
+    overflow: hidden;
 }
 
 .panel-canvas-container {

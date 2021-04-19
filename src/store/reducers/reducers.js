@@ -39,7 +39,6 @@ const pipe = (...functions) => args => functions.reduce((arg, fn) => fn(arg), ar
 export const editorReducer = (state = initialState, action = {}) => {
     switch (action.type) {
         case UPDATE_ELEMENTS:
-            console.log("OK");
             return {...state, elements: action.payload}
         case SET_SELECTED_ELEMENT_ID:
             return {...state, selectedElementId: action.payload}

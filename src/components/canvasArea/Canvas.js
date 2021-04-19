@@ -9,6 +9,11 @@ const Canvas = () => {
     const elements = useSelector(state => state.editor.elements);
 
     useEffect(() => {
+        console.log("%cHi Canva, I'd like to work with you :)", "font-family: monospace; font-size: 1.4em; color: #ffffff; background-color: #00c4cc; padding: 2px");
+        console.log("Email: alex.saliu@gmail.com");
+    }, [])
+
+    useEffect(() => {
         console.log("updated");
     }, [elements])
 

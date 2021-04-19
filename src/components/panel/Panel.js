@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { getElement, getParent, logHtml } from '../../helpers.js'
+import { getElement, getParent, logHtml, randomHex } from '../../helpers.js'
 import './panel.css'
 
 import ColorPanel from './ColorPanel.js'
@@ -17,7 +17,8 @@ import {
     setSelectedElementId,
     setHoveredElementId,
     toggleColorPanel,
-    selectProject
+    selectProject,
+    updateHistory
 } from '../../store/actions/actions.js'
 
 import {
@@ -81,9 +82,9 @@ const Panel = () => {
             styles: {
                 'left': '0px',
                 'top': '0px',
-                'width': '90%',
-                'height': '90%',
-                'background': '#293039',
+                'width': '50%',
+                'height': '50%',
+                'background': randomHex(),
                 'position': 'relative',
                 'boxSizing': 'borderBox',
             },
@@ -102,6 +103,7 @@ const Panel = () => {
             newElement.id = id
             dispatch(updateElements(elements.concat(newElement)))
         }
+        dispatch(updateHistory())
     }
 
     const deleteElement = () => {
@@ -129,7 +131,8 @@ const Panel = () => {
         }
 
         dispatch(setSelectedElementId(''))
-        dispatch(updateElements(currentElements));
+        dispatch(updateElements(currentElements))
+        dispatch(updateHistory())
     }
 
     const restart = () => {
