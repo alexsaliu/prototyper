@@ -47,9 +47,12 @@ const Adjuster = () => {
             const unit = getUnit(styles.width)
             let parent = getParent(selectedId, elements)
 
+            console.log(parseFloat(styles.height));
+
             const calculatePercentage = (mouseMovement, parentSize) => {
                 let value = mouseMovement / parentSize * 100
                 return parseFloat(value.toFixed(2))
+                // return +(Math.round(value + "e+4")  + "e-4")
             }
 
             if (styles.position === 'relative') {

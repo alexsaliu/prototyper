@@ -1,10 +1,5 @@
 export const styleButtons = [
     {
-        property: 'display',
-        value: 'flex',
-        label: 'flexbox'
-    },
-    {
         property: 'flexDirection',
         value: 'row',
         label: 'row'

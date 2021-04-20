@@ -87,6 +87,7 @@ const Panel = () => {
                 'background': randomHex(),
                 'position': 'relative',
                 'boxSizing': 'borderBox',
+                'display': 'flex'
             },
             children: []
         }
