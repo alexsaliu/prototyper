@@ -23,16 +23,6 @@ const Element = ({id, children, preventParentHovering}) => {
 
     const elementRef = useRef(null)
 
-    useEffect(() => {
-        const element = getElement(id, elements)
-        const dimensions = elementRef.current.getBoundingClientRect()
-        element.data = {
-            width: dimensions.width,
-            height: dimensions.height
-        }
-        dispatch(updateElements(elements))
-    }, [elements])
-
     const handleClick = (e) => {
         e.stopPropagation()
         dispatch(setSelectedElementId(id))
@@ -60,7 +50,7 @@ const Element = ({id, children, preventParentHovering}) => {
             onMouseLeave={(e) => handelHover(e, false)}
         >
             {hoveredId === id || (hovered && !childHovered) ? <div className="hover-border"></div> : ''}
-            {selectedId === id ? <Adjuster /> : ''}
+            {selectedId === id ? <Adjuster elementRef={elementRef} /> : ''}
             {children.map((element, i) => <Element key={i} id={id + '-' + i} children={element.children} preventParentHovering={childHovering} />)}
         </div>
     );

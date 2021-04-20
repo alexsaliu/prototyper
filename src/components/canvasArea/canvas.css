@@ -2,3 +2,8 @@
     background: white;
     margin: auto;
 }
+
+.gridline {
+    background: orange;
+    position: absolute;
+}

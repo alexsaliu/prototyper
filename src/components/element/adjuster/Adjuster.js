@@ -10,7 +10,7 @@ import {
     updateHistory
 } from '../../../store/actions/actions.js'
 
-const Adjuster = () => {
+const Adjuster = ({elementRef}) => {
     const [adjusterStyles, setAdjusterStyles] = useState({})
     const [styles, setStyles] = useState({})
 
@@ -18,6 +18,19 @@ const Adjuster = () => {
     const canvasSize = useSelector(state => state.editor.canvasSize)
     const elements = useSelector(state => state.editor.elements)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        const els = [...elements]
+        const element = getElement(selectedId, els)
+        const dimensions = elementRef.current.getBoundingClientRect()
+        element.data = {
+            left: dimensions.left,
+            right: dimensions.right,
+            top: dimensions.top,
+            bottom: dimensions.bottom
+        }
+        dispatch(updateElements(els))
+    }, [])
 
     useEffect(() => {
         setStyles(getElement(selectedId, elements).styles)
@@ -47,8 +60,6 @@ const Adjuster = () => {
             const unit = getUnit(styles.width)
             let parent = getParent(selectedId, elements)
 
-            console.log(parseFloat(styles.height));
-
             const calculatePercentage = (mouseMovement, parentSize) => {
                 let value = mouseMovement / parentSize * 100
                 return parseFloat(value.toFixed(2))
@@ -72,6 +83,15 @@ const Adjuster = () => {
                 height: (parseFloat(styles.height) + (move.height ? move.height === "opposite" ? calculatePercentage(-e.movementY, parent.data.height) : calculatePercentage(e.movementY, parent.data.height) : '')) + unit,
                 width: (parseFloat(styles.width) + (move.width ? move.width === "opposite" ? calculatePercentage(-e.movementX, parent.data.width) : calculatePercentage(e.movementX, parent.data.width) : '')) + unit,
             }
+
+            const dimensions = elementRef.current.getBoundingClientRect()
+            currentElement.data = {
+                left: dimensions.left,
+                right: dimensions.right,
+                top: dimensions.top,
+                bottom: dimensions.bottom
+            }
+
             dispatch(updateElements(currentElements));
         }
     }
