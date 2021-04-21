@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { useSelector } from 'react-redux';
 
 import './canvas.css';
@@ -20,28 +20,22 @@ const Canvas = () => {
         console.log("Email: alex.saliu@gmail.com");
     }, [])
 
-    // useEffect(() => {
-    //     console.log(gridPositions);
-        
-    // }, [gridPositions])
-
     useEffect(() => {
         console.log("Elements updated")
-        console.log(gridPositions[0]?.left)
-        // see if gridline matches
+        if (!selectedId) return
         const element = getElement(selectedId, elements)
         for (const positions of gridPositions) {
             console.log(positions);
             
             console.log(element.data.left);
             console.log(positions.left);
-            console.log(element.data.left < positions.left);
-            console.log(element.data.left + 5 > positions.left);
+            console.log(element.data.left - 1 < positions.left);
+            console.log(element.data.left + 1 > positions.left);
             
             if (element.data.left - 1 < positions.left && element.data.left + 1 > positions.left) {
                 setGridLine(true)
                 const style = {...gridLineStyle}
-                style.left = element.data.left - 200 + 'px'
+                style.left = element.data.left + 'px'
                 setGridLineStyle(style)
                 break
             }
@@ -55,7 +49,6 @@ const Canvas = () => {
         if (selectedId) {
             setGridPositions(traverseElementsForPositions(elements, selectedId))
             console.log(gridPositions);
-            
         }
         else {
             setGridLine(false)
@@ -66,7 +59,7 @@ const Canvas = () => {
         for (const element of elements) {
             if (element.id === id) continue
             positions.push(element.data)
-            traverseElementsForPositions(element.children, id)
+            traverseElementsForPositions(element.children, id, positions)
         }
         return positions
     }

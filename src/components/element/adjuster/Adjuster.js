@@ -22,13 +22,10 @@ const Adjuster = ({elementRef}) => {
     useEffect(() => {
         const els = [...elements]
         const element = getElement(selectedId, els)
-        const dimensions = elementRef.current.getBoundingClientRect()
-        element.data = {
-            left: dimensions.left,
-            right: dimensions.right,
-            top: dimensions.top,
-            bottom: dimensions.bottom
-        }
+        const elementDimensions = elementRef.current.getBoundingClientRect()
+        const canvasDimensions = document.querySelector('.canvas').getBoundingClientRect()
+
+        element.data = calculatePositions(elementDimensions, canvasDimensions)
         dispatch(updateElements(els))
     }, [])
 
@@ -44,6 +41,15 @@ const Adjuster = ({elementRef}) => {
         adjuster.top = `-${parentBorder}px`
         setAdjusterStyles(adjuster)
     }, [elements])
+
+    const calculatePositions = (elementDimensions, canvasDimensions) => {
+        return {
+            'left': elementDimensions.left - canvasDimensions.left,
+            'right': elementDimensions.right - canvasDimensions.right,
+            'top': elementDimensions.top - canvasDimensions.top,
+            'bottom': elementDimensions.bottom - canvasDimensions.bottom
+        }
+    }
 
     const getUnit = (value) => {
         if (typeof value !== 'string') return ''
@@ -84,13 +90,9 @@ const Adjuster = ({elementRef}) => {
                 width: (parseFloat(styles.width) + (move.width ? move.width === "opposite" ? calculatePercentage(-e.movementX, parent.data.width) : calculatePercentage(e.movementX, parent.data.width) : '')) + unit,
             }
 
-            const dimensions = elementRef.current.getBoundingClientRect()
-            currentElement.data = {
-                left: dimensions.left,
-                right: dimensions.right,
-                top: dimensions.top,
-                bottom: dimensions.bottom
-            }
+            const elementDimensions = elementRef.current.getBoundingClientRect()
+            const canvasDimensions = document.querySelector('.canvas').getBoundingClientRect()
+            currentElement.data = calculatePositions(elementDimensions, canvasDimensions)
 
             dispatch(updateElements(currentElements));
         }
