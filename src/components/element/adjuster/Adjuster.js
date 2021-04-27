@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { getElement, getParent } from '../../../helpers.js'
+import { getElement, getParent, calculatePositions } from '../../../helpers.js'
 
 import './adjuster.css'
 
@@ -19,6 +19,8 @@ const Adjuster = ({elementRef}) => {
     const elements = useSelector(state => state.editor.elements)
     const dispatch = useDispatch()
 
+    const positionRef = useRef(null)
+
     useEffect(() => {
         const els = [...elements]
         const element = getElement(selectedId, els)
@@ -27,6 +29,7 @@ const Adjuster = ({elementRef}) => {
 
         element.data = calculatePositions(elementDimensions, canvasDimensions)
         dispatch(updateElements(els))
+        console.log("Updated Positions");
     }, [])
 
     useEffect(() => {
@@ -41,15 +44,6 @@ const Adjuster = ({elementRef}) => {
         adjuster.top = `-${parentBorder}px`
         setAdjusterStyles(adjuster)
     }, [elements])
-
-    const calculatePositions = (elementDimensions, canvasDimensions) => {
-        return {
-            'left': elementDimensions.left - canvasDimensions.left,
-            'right': elementDimensions.right - canvasDimensions.right,
-            'top': elementDimensions.top - canvasDimensions.top,
-            'bottom': elementDimensions.bottom - canvasDimensions.bottom
-        }
-    }
 
     const getUnit = (value) => {
         if (typeof value !== 'string') return ''
@@ -69,7 +63,6 @@ const Adjuster = ({elementRef}) => {
             const calculatePercentage = (mouseMovement, parentSize) => {
                 let value = mouseMovement / parentSize * 100
                 return parseFloat(value.toFixed(2))
-                // return +(Math.round(value + "e+4")  + "e-4")
             }
 
             if (styles.position === 'relative') {
@@ -81,6 +74,18 @@ const Adjuster = ({elementRef}) => {
                 parent = {}
                 parent.data = {width: canvasSize[0], height: canvasSize[1]}
             }
+
+            const updatePosition = (change) => {
+                positionRef.current = positionRef.current + change
+                console.log(positionRef.current);
+                if (positionRef.current > 600) {
+                    console.log("over 600")
+                }
+            }
+            updatePosition()
+            // save absolute left position
+            // if absolute left position is within 5 px of a snap point, return snap point
+            // else return absolute left
 
             currentElement.styles = {
                 ...styles,
@@ -99,6 +104,7 @@ const Adjuster = ({elementRef}) => {
     }
 
     const commenceMovingElement = (params) => {
+        positionRef.current = parseInt(getElement(selectedId, elements).styles.left)
         const mouseMove = changeElementPosition(params)
         window.addEventListener('mousemove', mouseMove)
         window.addEventListener('mouseup', function mouseUp() {

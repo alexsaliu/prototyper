@@ -91,7 +91,7 @@ const ColorPicker = ({startColor, changeColor}) => {
     }
 
     const handelColorSlider = (e) => {
-        const rect = document.querySelector('.containerTop').getBoundingClientRect();
+        const rect = document.querySelector('.containerTop').getBoundingClientRect()
         setSelectorPosition(setInitialPosition(e, rect))
         const windowMouseMove = moveColorSelector(rect)
         document.querySelector('.containerTop').style.cursor = 'none'

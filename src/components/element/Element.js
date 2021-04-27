@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { getElement } from '../../helpers.js'
+import { getElement, calculatePositions } from '../../helpers.js'
 import Adjuster from './adjuster/Adjuster.js'
 
 import './element.css'
@@ -22,6 +22,17 @@ const Element = ({id, children, preventParentHovering}) => {
     const dispatch = useDispatch()
 
     const elementRef = useRef(null)
+
+    useEffect(() => {
+        const els = [...elements]
+        const element = getElement(selectedId, els)
+        const elementDimensions = elementRef.current.getBoundingClientRect()
+        const canvasDimensions = document.querySelector('.canvas').getBoundingClientRect()
+
+        element.data = calculatePositions(elementDimensions, canvasDimensions)
+        dispatch(updateElements(els))
+        console.log("Updated Positions");
+    }, [])
 
     const handleClick = (e) => {
         e.stopPropagation()

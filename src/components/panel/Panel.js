@@ -89,6 +89,7 @@ const Panel = () => {
                 'boxSizing': 'borderBox',
                 'display': 'flex'
             },
+            data: {},
             children: []
         }
         if (selectedId) {

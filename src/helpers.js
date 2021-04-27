@@ -27,6 +27,15 @@ export const randomHex = () => {
     return hex
 }
 
+export const calculatePositions = (elementDimensions, canvasDimensions) => {
+    return {
+        'left': elementDimensions.left - canvasDimensions.left,
+        'right': elementDimensions.right - canvasDimensions.right,
+        'top': elementDimensions.top - canvasDimensions.top,
+        'bottom': elementDimensions.bottom - canvasDimensions.bottom
+    }
+}
+
 export const logHtml = (elements) => {
     const removeCamelCasing = (string) => {
         if (string[0] === '#') return string

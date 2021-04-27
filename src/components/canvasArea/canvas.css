@@ -6,4 +6,5 @@
 .gridline {
     background: orange;
     position: absolute;
+    top: 0;
 }

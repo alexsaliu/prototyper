@@ -15,23 +15,23 @@ const Canvas = () => {
     const elements = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
 
+    const state = useSelector(state => state);
+
     useEffect(() => {
         console.log("%cHi Canva, I'd like to work with you :)", "font-family: monospace; font-size: 1.4em; color: #ffffff; background-color: #00c4cc; padding: 2px");
         console.log("Email: alex.saliu@gmail.com");
     }, [])
 
     useEffect(() => {
+
+    }, [state])
+
+    useEffect(() => {
         console.log("Elements updated")
         if (!selectedId) return
         const element = getElement(selectedId, elements)
         for (const positions of gridPositions) {
-            console.log(positions);
-            
-            console.log(element.data.left);
-            console.log(positions.left);
-            console.log(element.data.left - 1 < positions.left);
-            console.log(element.data.left + 1 > positions.left);
-            
+
             if (element.data.left - 1 < positions.left && element.data.left + 1 > positions.left) {
                 setGridLine(true)
                 const style = {...gridLineStyle}
@@ -63,7 +63,7 @@ const Canvas = () => {
         }
         return positions
     }
-    
+
 
     return (
         <div
