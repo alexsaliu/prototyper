@@ -53,6 +53,8 @@ const StylesInput = () => {
             'm': 'margin',
             'p': 'padding',
             'bg': 'background',
+            'br': 'borderRadius',
+            'bs': 'boxShadow'
         }
 
         const currentElements = [...elements]

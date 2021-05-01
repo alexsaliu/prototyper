@@ -25,7 +25,7 @@ const Element = ({id, children, preventParentHovering}) => {
 
     useEffect(() => {
         const els = [...elements]
-        const element = getElement(selectedId, els)
+        const element = getElement(id, els)
         const elementDimensions = elementRef.current.getBoundingClientRect()
         const canvasDimensions = document.querySelector('.canvas').getBoundingClientRect()
 

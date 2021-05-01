@@ -17,6 +17,7 @@ const Adjuster = ({elementRef}) => {
     const selectedId = useSelector(state => state.editor.selectedElementId)
     const canvasSize = useSelector(state => state.editor.canvasSize)
     const elements = useSelector(state => state.editor.elements)
+
     const dispatch = useDispatch()
 
     const positionRef = useRef(null)
@@ -29,7 +30,6 @@ const Adjuster = ({elementRef}) => {
 
         element.data = calculatePositions(elementDimensions, canvasDimensions)
         dispatch(updateElements(els))
-        console.log("Updated Positions");
     }, [])
 
     useEffect(() => {
@@ -75,22 +75,44 @@ const Adjuster = ({elementRef}) => {
                 parent.data = {width: canvasSize[0], height: canvasSize[1]}
             }
 
-            const updatePosition = (change) => {
-                positionRef.current = positionRef.current + change
-                console.log(positionRef.current);
-                if (positionRef.current > 600) {
-                    console.log("over 600")
-                }
+            const updatePosition = (xChange, yChange) => {
+                const left = positionRef.current.left + xChange
+                positionRef.current = {...positionRef.current, left}
             }
-            updatePosition()
-            // save absolute left position
-            // if absolute left position is within 5 px of a snap point, return snap point
-            // else return absolute left
+
+            // Check position against snapPoints
+            const checkForSnapPoints = (elements, x) => {
+                for (const element of elements) {
+                    if (element.id === selectedId) break;
+                    const left = parseInt(element.data.left)
+                    if (x - 5 < left && x + 5 > left) {
+                        console.log('SNAP: ', left);
+                        return left
+                    }
+                    const childLeft = checkForSnapPoints(element.children, x)
+                    if (childLeft) return childLeft
+                }
+                return false
+            }
+
+            let top = ''
+            let left = ''
+            let height = ''
+            let width = ''
+
+            if (move.left) {
+                const changeX = move.left === "opposite" ? -e.movementX : e.movementX
+                updatePosition(e.movementX, e.movementY)
+            }
+
+            left = checkForSnapPoints(currentElements, positionRef.current.left)
+            if (left === false) left = positionRef.current.left
+            left = left + 'px'
 
             currentElement.styles = {
                 ...styles,
                 top: (parseInt(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
-                left: (parseInt(styles.left) + (move.left ? move.left === "opposite" ? -e.movementX : e.movementX : '')) + 'px',
+                left,
                 height: (parseFloat(styles.height) + (move.height ? move.height === "opposite" ? calculatePercentage(-e.movementY, parent.data.height) : calculatePercentage(e.movementY, parent.data.height) : '')) + unit,
                 width: (parseFloat(styles.width) + (move.width ? move.width === "opposite" ? calculatePercentage(-e.movementX, parent.data.width) : calculatePercentage(e.movementX, parent.data.width) : '')) + unit,
             }
@@ -103,8 +125,18 @@ const Adjuster = ({elementRef}) => {
         }
     }
 
+    const setStartingPositionRef = (id, els) => {
+        const styles = getElement(id, els).styles
+        return {
+            'top': parseInt(styles.top),
+            'left': parseInt(styles.left),
+            'height': parseInt(styles.height),
+            'width': parseInt(styles.width),
+        }
+    }
+
     const commenceMovingElement = (params) => {
-        positionRef.current = parseInt(getElement(selectedId, elements).styles.left)
+        positionRef.current = setStartingPositionRef(selectedId, elements)
         const mouseMove = changeElementPosition(params)
         window.addEventListener('mousemove', mouseMove)
         window.addEventListener('mouseup', function mouseUp() {

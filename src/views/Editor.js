@@ -1,5 +1,5 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import './editor.css'
 
 import {
@@ -11,10 +11,10 @@ import Header from '../components/header/Header.js'
 import Panel from '../components/panel/Panel.js'
 import Canvas from '../components/canvasArea/Canvas.js'
 import CanvasHeader from '../components/canvasArea/CanvasHeader.js'
-import Input from './Input.js'
+import StylesInput from './StylesInput.js'
 
 const Editor = () => {
-
+    const selectedId = useSelector(state => state.editor.selectedElementId)
     const dispatch = useDispatch()
 
     const unSelectElements = () => {
@@ -32,7 +32,7 @@ const Editor = () => {
                     <div onClick={() => unSelectElements()} className="canvas-container">
                         <Canvas />
                     </div>
-                    <Input />
+                    {selectedId ? <StylesInput key={selectedId} /> : ''}
                 </div>
             </div>
         </div>

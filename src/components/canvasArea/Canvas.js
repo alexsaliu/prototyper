@@ -23,11 +23,6 @@ const Canvas = () => {
     }, [])
 
     useEffect(() => {
-
-    }, [state])
-
-    useEffect(() => {
-        console.log("Elements updated")
         if (!selectedId) return
         const element = getElement(selectedId, elements)
         for (const positions of gridPositions) {
