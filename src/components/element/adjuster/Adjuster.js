@@ -62,7 +62,7 @@ const Adjuster = ({elementRef}) => {
 
             const calculatePercentage = (mouseMovement, parentSize) => {
                 let value = mouseMovement / parentSize * 100
-                return parseFloat(value.toFixed(2))
+                return value
             }
 
             if (styles.position === 'relative') {
@@ -75,22 +75,22 @@ const Adjuster = ({elementRef}) => {
                 parent.data = {width: canvasSize[0], height: canvasSize[1]}
             }
 
-            const updatePosition = (xChange, yChange) => {
-                const left = positionRef.current.left + xChange
-                positionRef.current = {...positionRef.current, left}
+            const updatePosition = (movement, changes) => {
+                if (changes.left) positionRef.current.left = positionRef.current.left + movement[0]
+                if (changes.top) positionRef.current.top = positionRef.current.top + movement[1]
             }
 
             // Check position against snapPoints
-            const checkForSnapPoints = (elements, x) => {
+            const checkForSnapPoints = (elements, movement, side) => {
                 for (const element of elements) {
                     if (element.id === selectedId) break;
-                    const left = parseInt(element.data.left)
-                    if (x - 5 < left && x + 5 > left) {
-                        console.log('SNAP: ', left);
-                        return left
+                    const position = parseInt(element.data[side])
+                    if (movement - 5 < position && movement + 5 > position) {
+                        console.log('SNAP: ', position);
+                        return position
                     }
-                    const childLeft = checkForSnapPoints(element.children, x)
-                    if (childLeft) return childLeft
+                    const child = checkForSnapPoints(element.children, movement, side)
+                    if (child) return child
                 }
                 return false
             }
@@ -100,21 +100,22 @@ const Adjuster = ({elementRef}) => {
             let height = ''
             let width = ''
 
-            if (move.left) {
-                const changeX = move.left === "opposite" ? -e.movementX : e.movementX
-                updatePosition(e.movementX, e.movementY)
-            }
+            updatePosition([e.movementX, e.movementY], move)
 
-            left = checkForSnapPoints(currentElements, positionRef.current.left)
+            left = checkForSnapPoints(currentElements, positionRef.current.left, 'left')
             if (left === false) left = positionRef.current.left
             left = left + 'px'
 
+            top = checkForSnapPoints(currentElements, positionRef.current.top, 'top')
+            if (top === false) top = positionRef.current.top
+            top = top + 'px'
+
             currentElement.styles = {
                 ...styles,
-                top: (parseInt(styles.top) + (move.top ? move.top === "opposite" ? -e.movementY : e.movementY : '')) + 'px',
+                top,
                 left,
-                height: (parseFloat(styles.height) + (move.height ? move.height === "opposite" ? calculatePercentage(-e.movementY, parent.data.height) : calculatePercentage(e.movementY, parent.data.height) : '')) + unit,
-                width: (parseFloat(styles.width) + (move.width ? move.width === "opposite" ? calculatePercentage(-e.movementX, parent.data.width) : calculatePercentage(e.movementX, parent.data.width) : '')) + unit,
+                height: parseFloat(styles.height) + (move.height ? calculatePercentage(move.height === "opposite" ? -e.movementY : e.movementY, parent.data.height) : '') + unit,
+                width: parseFloat(styles.width) + (move.width ? calculatePercentage(move.width === "opposite" ? -e.movementX : e.movementX, parent.data.width) : '') + unit,
             }
 
             const elementDimensions = elementRef.current.getBoundingClientRect()

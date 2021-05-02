@@ -8,8 +8,14 @@ import { getElement } from '../../helpers.js'
 
 const Canvas = () => {
     const [gridPositions, setGridPositions] = useState([])
-    const [gridLine, setGridLine] = useState(false)
-    const [gridLineStyle, setGridLineStyle] = useState({height: '100%', width: '2px'})
+    const [gridLines, setGridLines] = useState({
+        'left': false,
+        'top': false
+    })
+    const [gridLineStyles, setGridLineStyles] = useState({
+        'left': {height: '100%', width: '2px'},
+        'top': {height: '2px', width: '100%'}
+    })
 
     const canvasSize = useSelector(state => state.editor.canvasSize);
     const elements = useSelector(state => state.editor.elements);
@@ -25,18 +31,25 @@ const Canvas = () => {
     useEffect(() => {
         if (!selectedId) return
         const element = getElement(selectedId, elements)
+        const lines = {...gridLines}
+        const styles = {...gridLineStyles}
         for (const positions of gridPositions) {
-
-            if (element.data.left - 1 < positions.left && element.data.left + 1 > positions.left) {
-                setGridLine(true)
-                const style = {...gridLineStyle}
-                style.left = element.data.left + 'px'
-                setGridLineStyle(style)
-                break
+            let match = false
+            for (const side of Object.keys(gridLineStyles)) {
+                if (element.data[side] - 1 < positions[side] && element.data[side] + 1 > positions[side]) {
+                    lines[side] = true
+                    match = true
+                    const sideStyles = {...styles[side]}
+                    sideStyles[side] = element.data[side] + 'px'
+                    styles[side] = sideStyles
+                }
+                else {
+                    lines[side] = false
+                }
             }
-            else {
-                setGridLine(false)
-            }
+            setGridLines(lines)
+            setGridLineStyles(styles)
+            if (match) break
         }
     }, [elements])
 
@@ -46,7 +59,7 @@ const Canvas = () => {
             console.log(gridPositions);
         }
         else {
-            setGridLine(false)
+            setGridLines({'left': false, 'top': false})
         }
     }, [selectedId])
 
@@ -73,7 +86,8 @@ const Canvas = () => {
             }}
         >
             {elements.map((element, i) => <Element key={i} id={i.toString()} children={element.children} />)}
-            {gridLine ? <div style={gridLineStyle} className="gridline"></div> : ''}
+            {gridLines.left ? <div style={gridLineStyles.left} className="gridline"></div> : ''}
+            {gridLines.top ? <div style={gridLineStyles.top} className="gridline"></div> : ''}
         </div>
     );
 }
