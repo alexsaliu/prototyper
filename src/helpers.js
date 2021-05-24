@@ -30,9 +30,9 @@ export const randomHex = () => {
 export const calculatePositions = (elementDimensions, canvasDimensions) => {
     return {
         'left': elementDimensions.left - canvasDimensions.left,
-        'right': elementDimensions.right - canvasDimensions.right,
+        'right': elementDimensions.left - canvasDimensions.left + elementDimensions.width,
         'top': elementDimensions.top - canvasDimensions.top,
-        'bottom': elementDimensions.bottom - canvasDimensions.bottom
+        'bottom': elementDimensions.top - canvasDimensions.top + elementDimensions.height
     }
 }
 

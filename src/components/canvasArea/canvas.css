@@ -1,10 +1,12 @@
 .canvas {
     background: white;
     margin: auto;
+    position: relative;
 }
 
 .gridline {
-    background: orange;
+    /* background: orange; */
     position: absolute;
     top: 0;
+    border: 1px dashed #ff00d8;
 }
