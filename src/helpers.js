@@ -32,7 +32,9 @@ export const calculatePositions = (elementDimensions, canvasDimensions) => {
         'left': elementDimensions.left - canvasDimensions.left,
         'right': elementDimensions.left - canvasDimensions.left + elementDimensions.width,
         'top': elementDimensions.top - canvasDimensions.top,
-        'bottom': elementDimensions.top - canvasDimensions.top + elementDimensions.height
+        'bottom': elementDimensions.top - canvasDimensions.top + elementDimensions.height,
+        'width': elementDimensions.width,
+        'height': elementDimensions.height,
     }
 }
 

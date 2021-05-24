@@ -74,7 +74,12 @@ const Canvas = () => {
     const traverseElementsForPositions = (elements, id, positions=[]) => {
         for (const element of elements) {
             if (element.id === id) continue
-            positions.push(element.data)
+            positions.push({
+                'top': element.data.top,
+                'bottom': element.data.bottom,
+                'left': element.data.left,
+                'right': element.data.right
+            })
             traverseElementsForPositions(element.children, id, positions)
         }
         return positions

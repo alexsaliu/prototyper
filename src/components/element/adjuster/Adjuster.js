@@ -84,23 +84,24 @@ const Adjuster = ({elementRef}) => {
             const checkForSnapPoints = (elements, movement, side) => {
                 for (const element of elements) {
                     if (element.id === selectedId) break;
-                    let positions = []
-                    if (side === 'top' || side === 'bottom') {
-                        positions = [element.data['top'], element.data['bottom']]
-                    }
-                    else {
-                        positions = [element.data['left'], element.data['right']]
-                    }
+                    let positions = side === 'top' ? [element.data['top'], element.data['bottom']] : [element.data['left'], element.data['right']]
+                    let oppositeSide = side === 'top' ? currentElement.data['height'] : currentElement.data['width']
+                    
+
                     if (movement - 5 < positions[0] && movement + 5 > positions[0]) {
-                        console.log('SNAP: ', positions[0]);
                         return positions[0]
                     }
+                    else if (movement + oppositeSide - 5 < positions[0] && movement + oppositeSide + 5 > positions[0]) {
+                        return positions[0] - oppositeSide
+                    }
                     else if (movement - 5 < positions[1] && movement + 5 > positions[1]) {
-                        console.log('SNAP: ', positions[1]);
                         return positions[1]
                     }
-                    const child = checkForSnapPoints(element.children, movement, side)
-                    if (child) return child
+                    else if (movement + oppositeSide - 5 < positions[1] && movement + oppositeSide + 5 > positions[1]) {
+                        return positions[1] - oppositeSide
+                    }
+                    const childMatch = checkForSnapPoints(element.children, movement, side)
+                    if (childMatch) return childMatch
                 }
                 return false
             }
