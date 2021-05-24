@@ -82,16 +82,26 @@ const Adjuster = ({elementRef}) => {
 
             // Check position against snapPoints
             const checkForSnapPoints = (elements, movement, side) => {
-                // for (const element of elements) {
-                //     if (element.id === selectedId) break;
-                //     const position = parseInt(element.data[side])
-                //     if (movement - 5 < position && movement + 5 > position) {
-                //         console.log('SNAP: ', position);
-                //         return position
-                //     }
-                //     const child = checkForSnapPoints(element.children, movement, side)
-                //     if (child) return child
-                // }
+                for (const element of elements) {
+                    if (element.id === selectedId) break;
+                    let positions = []
+                    if (side === 'top' || side === 'bottom') {
+                        positions = [element.data['top'], element.data['bottom']]
+                    }
+                    else {
+                        positions = [element.data['left'], element.data['right']]
+                    }
+                    if (movement - 5 < positions[0] && movement + 5 > positions[0]) {
+                        console.log('SNAP: ', positions[0]);
+                        return positions[0]
+                    }
+                    else if (movement - 5 < positions[1] && movement + 5 > positions[1]) {
+                        console.log('SNAP: ', positions[1]);
+                        return positions[1]
+                    }
+                    const child = checkForSnapPoints(element.children, movement, side)
+                    if (child) return child
+                }
                 return false
             }
 
