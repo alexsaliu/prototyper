@@ -145,6 +145,10 @@
     user-select: text;
 }
 
+.style-panel {
+    overflow: auto;
+}
+
 .panel .html {
     overflow: auto;
     white-space: nowrap;

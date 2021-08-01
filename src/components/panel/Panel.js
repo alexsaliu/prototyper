@@ -215,14 +215,14 @@ const Panel = () => {
                         {panelElements.map((element, i) =>
                             <div className="class" key={i}>
                                 <div className="red">.element{element.id} <span className="bracket">{'{'}</span></div>
-                                {Object.keys(elementStyles).map((key, i) => <div className="css-style orange" key={i}><span className="blue">{key}:</span> {elementStyles[key]};</div>)}
+                                {Object.keys(element.styles).map((key, i) => <div className="css-style orange" key={i}><span className="blue">{key}:</span> {element.styles[key]};</div>)}
                                 <div className="bracket red">{'}'}</div>
                                 <div>&nbsp;</div>
                             </div>
                         )}
                     </div>
                 </div>
-                : ''
+                : sidebarItem === 3 ? <div className="panel style-panel"></div> : ''
             }
             {
                 sidebarItem === 4 ?
