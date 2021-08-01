@@ -6,6 +6,7 @@ import './panel.css'
 
 import ColorPanel from './ColorPanel.js'
 import PanelElement from './PanelElement.js'
+import FormattedHtml from './FormattedHtml.js'
 // import StylesInput from './StylesInput.js'
 
 import { ReactComponent as Toggle } from './paneltoggle.svg'
@@ -180,6 +181,9 @@ const Panel = () => {
                             panelElements.map((el, i) => <PanelElement key={i} id={el.id} />)
                         }
                     </div>
+                    <div class='html'>
+                        {elements.map(element => <FormattedHtml element={element} level={0} />)}
+                    </div>
 
                 </div>
                 : ''
@@ -202,11 +206,21 @@ const Panel = () => {
             }
             {
                 sidebarItem === 3 && selectedId ?
-                <div className="panel">
-                    {Object.keys(elementStyles).map((key, i) => <div className="panel-style" key={i}><span>{key}:</span> {elementStyles[key]};</div>)}
+                <div className="panel style-panel">
+                    {Object.keys(elementStyles).map((key, i) => <div className="panel-style orange" key={i}><span>{key}:</span> {elementStyles[key]};</div>)}
                     {/* <div>
                         <StylesInput />
                     </div> */}
+                    <div className="css">
+                        {panelElements.map((element, i) =>
+                            <div className="class" key={i}>
+                                <div className="red">.element{element.id} <span className="bracket">{'{'}</span></div>
+                                {Object.keys(elementStyles).map((key, i) => <div className="css-style orange" key={i}><span className="blue">{key}:</span> {elementStyles[key]};</div>)}
+                                <div className="bracket red">{'}'}</div>
+                                <div>&nbsp;</div>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 : ''
             }

@@ -86,7 +86,7 @@ const Adjuster = ({elementRef}) => {
                     if (element.id === selectedId) break;
                     let positions = side === 'top' ? [element.data['top'], element.data['bottom']] : [element.data['left'], element.data['right']]
                     let oppositeSide = side === 'top' ? currentElement.data['height'] : currentElement.data['width']
-                    
+
 
                     if (movement - 5 < positions[0] && movement + 5 > positions[0]) {
                         return positions[0]
@@ -125,9 +125,12 @@ const Adjuster = ({elementRef}) => {
                 ...styles,
                 top,
                 left,
-                height: parseFloat(styles.height) + (move.height ? calculatePercentage(move.height === "opposite" ? -e.movementY : e.movementY, parent.data.height) : '') + unit,
-                width: parseFloat(styles.width) + (move.width ? calculatePercentage(move.width === "opposite" ? -e.movementX : e.movementX, parent.data.width) : '') + unit,
+                height: parseFloat(styles.height) + (move.height ? calculatePercentage(move.height === "opposite" ? -e.movementY : e.movementY, parent.data.height) : ''),
+                width: parseFloat(styles.width) + (move.width ? calculatePercentage(move.width === "opposite" ? -e.movementX : e.movementX, parent.data.width) : ''),
             }
+
+            currentElement.styles.height = Math.round(currentElement.styles.height * 10) / 10 + unit
+            currentElement.styles.width = Math.round(currentElement.styles.width * 10) / 10 + unit
 
             const elementDimensions = elementRef.current.getBoundingClientRect()
             const canvasDimensions = document.querySelector('.canvas').getBoundingClientRect()

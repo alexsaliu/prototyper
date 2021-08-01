@@ -121,6 +121,57 @@
     cursor: pointer;
 }
 
-.panel-style span {
+.panel-style span, .panel .blue {
     color: var(--highlight-color);
+}
+
+.orange {
+    color: #e3c82d;
+}
+.red {
+    color: #e54058;
+}
+
+.panel .css, .panel .html {
+    margin: 20px;
+    background: #0e1318;
+    text-align: left;
+    font-size: 12px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.style-panel *, .panel .html * {
+    user-select: text;
+}
+
+.panel .html {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+::selection {
+    background: #7c2ce8;
+}
+
+.panel .css-style {
+    margin-left: 24px;
+}
+
+.panel .html .element:hover {
+    /* background: #333333; */
+    cursor: pointer;
+}
+
+.html .red {
+    color: #ee0157;
+}
+.html .green {
+    color: #8ed900;
+}
+.html .white {
+    color: #f0f1e9;
+}
+.html .yellow {
+    color: #d0c74f;
 }
