@@ -15,6 +15,7 @@ import StylesInput from './StylesInput.js'
 
 const Editor = () => {
     const selectedId = useSelector(state => state.editor.selectedElementId)
+    const disableStylesInput = useSelector(state => state.editor.disableStylesInput)
     const dispatch = useDispatch()
 
     const unSelectElements = () => {
@@ -32,7 +33,7 @@ const Editor = () => {
                     <div onClick={() => unSelectElements()} className="canvas-container">
                         <Canvas />
                     </div>
-                    {selectedId ? <StylesInput key={selectedId} /> : ''}
+                    {selectedId && !disableStylesInput ? <StylesInput key={selectedId} /> : ''}
                 </div>
             </div>
         </div>

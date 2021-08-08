@@ -25,7 +25,7 @@ const FormattedHtml = ({element, level}) => {
                 onMouseEnter={() => dispatch(setHoveredElementId(element.id))}
                 onMouseLeave={() => dispatch(setHoveredElementId(''))}
                 style={{
-                    background: hoveredId === element.id ? '#293039': ''
+                    background: hoveredId === element.id ? '#333d4a': ''
                 }}
             >
                 <span dangerouslySetInnerHTML={{ __html: generateSpaces(level) }}></span>
@@ -43,7 +43,7 @@ const FormattedHtml = ({element, level}) => {
                 </span>
                 : ''}
             </div>
-                {element.children.map(child => <FormattedHtml element={child} level={level+1} />)}
+                {element.children.map((child, i) => <FormattedHtml element={child} level={level+1} key={i} />)}
             {element.children.length ?
             <div className="hello">
                 <span dangerouslySetInnerHTML={{ __html: generateSpaces(level) }}></span>

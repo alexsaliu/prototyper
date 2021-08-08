@@ -10,7 +10,8 @@ import './colorPanel.css'
 
 import {
     updateElements,
-    updateRecentColors
+    updateRecentColors,
+    setDisableStylesInput
 } from '../../store/actions/actions.js'
 
 const ColorPanel = () => {
@@ -28,11 +29,20 @@ const ColorPanel = () => {
     const elements = useSelector(state => state.editor.elements)
     const selectedId = useSelector(state => state.editor.selectedElementId)
     const recentColors = useSelector(state => state.editor.recentColors)
+    const disableStylesInput = useSelector(state => state.editor.disableStylesInput)
     const dispatch = useDispatch()
 
     useEffect(() => {
         setDocumentColors([...getElementsColors(elements)])
     }, [elements])
+
+    useEffect(() => {
+        dispatch(setDisableStylesInput(showColorPicker))
+    }, [showColorPicker])
+
+    useEffect(() => {
+        return () => dispatch(setDisableStylesInput(false))
+    }, [])
 
     useEffect(() => {
         setShowColorPicker(false)

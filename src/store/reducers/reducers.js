@@ -4,6 +4,7 @@ import {
     SET_HOVERED_ELEMENT_ID,
     SET_CANVAS_SIZE,
     TOGGLE_COLOR_PANEL,
+    SET_DISABLE_STYLES_INPUT,
     UPDATE_RECENT_COLORS,
     UPDATE_HISTORY,
     STEP_HISTORY,
@@ -19,6 +20,7 @@ const initialState = JSON.parse(localStorage.getItem('state')) || {
     selectedElementId: '',
     hoveredElementId: '',
     colorPanel: false,
+    disableStylesInput: false,
     recentColors: []
 }
 
@@ -48,6 +50,8 @@ export const editorReducer = (state = initialState, action = {}) => {
             return pipe(storeInLocalStorage, addToHistory)({...state, canvasSize: action.payload})
         case TOGGLE_COLOR_PANEL:
             return {...state, colorPanel: action.payload}
+        case SET_DISABLE_STYLES_INPUT:
+            return {...state, disableStylesInput: action.payload}
         case UPDATE_RECENT_COLORS:
             return pipe(storeInLocalStorage, addToHistory)({...state, recentColors: action.payload})
         case UPDATE_HISTORY:

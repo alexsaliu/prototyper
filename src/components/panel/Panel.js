@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { getElement, getParent, logHtml, randomHex } from '../../helpers.js'
+import { getElement, getParent, logHtml, randomHex, createNewElement } from '../../helpers.js'
 import './panel.css'
 
 import ColorPanel from './ColorPanel.js'
 import PanelElement from './PanelElement.js'
 import FormattedHtml from './FormattedHtml.js'
-// import StylesInput from './StylesInput.js'
 
 import { ReactComponent as Toggle } from './paneltoggle.svg'
 import { ReactComponent as Caret } from './caret.svg'
@@ -19,7 +18,8 @@ import {
     setHoveredElementId,
     toggleColorPanel,
     selectProject,
-    updateHistory
+    updateHistory,
+    setDisableStylesInput
 } from '../../store/actions/actions.js'
 
 import {
@@ -33,12 +33,15 @@ const Panel = () => {
     const [sidebarTitles] = useState(['Elements', 'Settings', 'Styles', 'Projects'])
     const [panelElements, setPanelElements] = useState([])
     const [elementStyles, setElementStyles] = useState({})
+    const [customHtml, setCustomHtml] = useState('')
 
     const state = useSelector(state => state.editor)
     const canvasSize = useSelector(state => state.editor.canvasSize)
     const selectedId = useSelector(state => state.editor.selectedElementId)
+    const hoveredId = useSelector(state => state.editor.hoveredElementId)
     const elements = useSelector(state => state.editor.elements)
     const colorPanel = useSelector(state => state.editor.colorPanel)
+    const disableStylesInput = useSelector(state => state.editor.disableStylesInput)
 
     const projects = useSelector(state => state.other.projects)
 
@@ -56,6 +59,47 @@ const Panel = () => {
     useEffect(() => {
         if (selectedId) setElementStyles(getElement(selectedId, elements).styles)
     }, [selectedId, elements])
+
+    useEffect(() => {
+        if (customHtml.length < 1) return
+        // const element = createNewElement()
+        let el = document.createElement('div')
+        el.innerHTML = customHtml
+        el = el.children[0]
+        console.log(el);
+        if (el?.style) console.log(el.style);
+
+        function recurse(element, elements=[], id=0) {
+            let el = createNewElement()
+            el.id = id + ''
+            elements.push(el)
+            let styles = getStyles(element)
+            for (const style of styles) {
+                el.styles[style] = element.style[style]
+            }
+            let children = element.children
+            for (let i = 0; i < children.length; i++) {
+                recurse(children[i], el.children, id + '-' + i)
+            }
+            return elements
+        }
+
+        function getStyles(el) {
+            let i = 0
+            let styles = []
+            while (i in el.style) {
+                styles.push(el.style[i])
+                i++
+            }
+            return styles
+        }
+
+        let result = []
+        if (el) result = recurse(el)
+
+        console.log(result)
+        // dispatch(updateElements(result))
+    }, [customHtml])
 
     const flattenElements = (elements, flatArray=[]) => {
         for (const element of elements) {
@@ -85,7 +129,7 @@ const Panel = () => {
                 'top': '0px',
                 'width': '50%',
                 'height': '50%',
-                'background': randomHex(),
+                'background': '#cfcfcf',
                 'position': 'relative',
                 'boxSizing': 'borderBox',
                 'display': 'flex'
@@ -93,6 +137,7 @@ const Panel = () => {
             data: {},
             children: []
         }
+        // newElement.styles.background = randomHex()
         if (selectedId) {
             const currentElement = getElement(selectedId, currentElements)
             const id = selectedId + `-${currentElement.children.length}`
@@ -152,8 +197,6 @@ const Panel = () => {
     const handelSelectProject = (index) => {
         const project = projects[index]
         if (!project) return
-        // console.log(project);
-        // console.log(selectProject(JSON.parse(JSON.stringify(project))))
         dispatch(selectProject(JSON.parse(JSON.stringify(project))))
     }
 
@@ -181,10 +224,14 @@ const Panel = () => {
                             panelElements.map((el, i) => <PanelElement key={i} id={el.id} />)
                         }
                     </div>
-                    <div class='html'>
-                        {elements.map(element => <FormattedHtml element={element} level={0} />)}
+                    <div className='html'>
+                        {elements.map((element, i) => <FormattedHtml element={element} level={0} key={i} />)}
                     </div>
-
+                    <textarea
+                        onFocus={() => dispatch(setDisableStylesInput(true))}
+                        onBlur={() => dispatch(setDisableStylesInput(false))}
+                        onChange={(e) => setCustomHtml(e.target.value)}
+                    ></textarea>
                 </div>
                 : ''
             }
@@ -213,11 +260,17 @@ const Panel = () => {
                     </div> */}
                     <div className="css">
                         {panelElements.map((element, i) =>
-                            <div className="class" key={i}>
+                            <div
+                                className="class"
+                                key={i}
+                                style={{background: element.id === selectedId || element.id === hoveredId ? '#293039' : ''}}
+                                onClick={() => dispatch(setSelectedElementId(element.id))}
+                                onMouseEnter={() => dispatch(setHoveredElementId(element.id))}
+                                onMouseLeave={() => dispatch(setHoveredElementId(''))}
+                            >
                                 <div className="red">.element{element.id} <span className="bracket">{'{'}</span></div>
                                 {Object.keys(element.styles).map((key, i) => <div className="css-style orange" key={i}><span className="blue">{key}:</span> {element.styles[key]};</div>)}
                                 <div className="bracket red">{'}'}</div>
-                                <div>&nbsp;</div>
                             </div>
                         )}
                     </div>

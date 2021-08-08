@@ -4,6 +4,7 @@ import {
     SET_HOVERED_ELEMENT_ID,
     SET_CANVAS_SIZE,
     TOGGLE_COLOR_PANEL,
+    SET_DISABLE_STYLES_INPUT,
     UPDATE_RECENT_COLORS,
     UPDATE_HISTORY,
     STEP_HISTORY,
@@ -37,6 +38,12 @@ export const setCanvasSize = (bool) => {
 export const toggleColorPanel = (bool) => {
     return {
         type: TOGGLE_COLOR_PANEL,
+        payload: bool,
+    }
+}
+export const setDisableStylesInput = (bool) => {
+    return {
+        type: SET_DISABLE_STYLES_INPUT,
         payload: bool,
     }
 }

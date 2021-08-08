@@ -117,6 +117,17 @@
     text-align: left;
 }
 
+.css .class {
+    padding: 6px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+}
+
+.html > div {
+    padding: 4px;
+    border-radius: 0 10px 10px 0;
+}
+
 .panel-project {
     cursor: pointer;
 }

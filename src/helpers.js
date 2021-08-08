@@ -72,3 +72,13 @@ export const generateSpaces = (n) => {
     }
     return spaces
 }
+
+export const createNewElement = () => {
+    return {
+        id: '',
+        type: 'div',
+        styles: {},
+        data: {},
+        children: []
+    }
+}
