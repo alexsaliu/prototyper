@@ -77,7 +77,14 @@ export const createNewElement = () => {
     return {
         id: '',
         type: 'div',
-        styles: {},
+        styles: {
+            'width': '90%',
+            'height': '90%',
+            'background': '#cfcfcf',
+            'position': 'relative',
+            'boxSizing': 'borderBox',
+            'display': 'flex'
+        },
         data: {},
         children: []
     }

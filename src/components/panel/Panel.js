@@ -62,7 +62,6 @@ const Panel = () => {
 
     useEffect(() => {
         if (customHtml.length < 1) return
-        // const element = createNewElement()
         let el = document.createElement('div')
         el.innerHTML = customHtml
         el = el.children[0]
@@ -75,7 +74,7 @@ const Panel = () => {
             elements.push(el)
             let styles = getStyles(element)
             for (const style of styles) {
-                el.styles[style] = element.style[style]
+                el.styles[toCamelCase(style)] = toCamelCase(element.style[style])
             }
             let children = element.children
             for (let i = 0; i < children.length; i++) {
@@ -84,21 +83,29 @@ const Panel = () => {
             return elements
         }
 
+        function toCamelCase(string) {
+            let s = string.split('-')
+            if (s.length < 2) return string
+            s[0].trim()
+            s[1].trim()
+            let secondWord = s[1].split('')
+            secondWord[0] = secondWord[0].toUpperCase()
+            s[1] = secondWord.join('')
+            return s.join('')
+        }
+
         function getStyles(el) {
-            let i = 0
-            let styles = []
-            while (i in el.style) {
-                styles.push(el.style[i])
-                i++
+            let styles = el.getAttribute('style')
+            if (styles) {
+                styles = styles.split(/:|;/)
+                styles = styles.filter((item, i) => (i+1)%2).map(item => item.trim())
+                styles.pop()
             }
-            return styles
+            return styles || []
         }
 
         let result = []
-        if (el) result = recurse(el)
-
-        console.log(result)
-        // dispatch(updateElements(result))
+        if (el) result = dispatch(updateElements(recurse(el)))
     }, [customHtml])
 
     const flattenElements = (elements, flatArray=[]) => {
@@ -228,6 +235,7 @@ const Panel = () => {
                         {elements.map((element, i) => <FormattedHtml element={element} level={0} key={i} />)}
                     </div>
                     <textarea
+                        placeholder="Paste HTML"
                         onFocus={() => dispatch(setDisableStylesInput(true))}
                         onBlur={() => dispatch(setDisableStylesInput(false))}
                         onChange={(e) => setCustomHtml(e.target.value)}
