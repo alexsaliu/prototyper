@@ -144,7 +144,7 @@ const Panel = () => {
             data: {},
             children: []
         }
-        // newElement.styles.background = randomHex()
+        newElement.styles.background = randomHex()
         if (selectedId) {
             const currentElement = getElement(selectedId, currentElements)
             const id = selectedId + `-${currentElement.children.length}`
